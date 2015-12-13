@@ -8,13 +8,13 @@
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td style="text-align:center">
-            <div if.bind="hasErrorMessage">
-              <h3 show.bind="hasErrorMessage" class="text-danger">${errorMessage}</h3>
+            <div if.bind="has_error_message">
+              <h3 show.bind="has_error_message" class="text-danger">${error_message}</h3>
             </div>
             <table>
               <tr>
                 <td>
-                  <img src.bind="loginImage"></img>
+                  <img src.bind="login_image"></img>
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td>
@@ -30,7 +30,7 @@
                       />
                     </div>
                     <div class="btn-group">
-                      <a class="btn btn-primary" click.delegate="perform_login()" href="#" show.bind="canConnect">
+                      <a class="btn btn-primary" click.delegate="perform_login()" href="#" show.bind="can_connect">
                         <i class="fa fa-user"></i>Connecter
                       </a>
                     </div>
@@ -44,8 +44,8 @@
   </div>
   <div if.bind="is_connected">
 		<connect-bar info.bind="userInfo"></connect-bar>
-    <div if.bind="hasSplashImage">
-      <img src.bind="splashImage"></img>
+    <div if.bind="has_splash_image">
+      <img src.bind="splash_image"></img>
     </div>
   </div>
 </template>
