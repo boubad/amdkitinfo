@@ -1,11 +1,12 @@
 // app.ts
 ///
+import {IInfoRouter} from 'infodata';	
+import {Router, RouterConfiguration} from 'aurelia-router';
+//
 import {InfoUserInfo} from './common/infouserinfo';
 import {BaseView} from '../data/baseview';
-import {Router, RouterConfiguration} from 'aurelia-router';
 import {ETUDDETAIL_ROUTE, GRPEVTDETAIL_ROUTE, ETUDEVTDETAIL_ROUTE,
 ETUDNOTES_ROUTE} from '../data/infoconstants';
-import {IInfoRouter} from 'infodata';	
 //
 class AureliaInfoRouter implements IInfoRouter {
 	private router: Router = null;

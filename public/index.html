@@ -22,25 +22,25 @@
 	<script src="javascripts/requirejs/require.js"></script>
 	<script>
 		var origin = window.location.origin;
-      var pathname = window.location.pathname;
-      var baseUrl = origin + pathname.toLowerCase().replace("index.html", "");
-      require.config({
-        baseUrl: baseUrl,
-        paths: {
-            aurelia: baseUrl + "javascripts/aurelia",
-			 pouchdb: baseUrl + "javascripts/pouchdb/pouchdb.min",
-			 pouchdbfind: baseUrl + "javascripts/pouchdb/pouchdb.find.min",
-			 papaparse: baseUrl + "javascripts/papaparse/papaparse",
-			webcomponentsjs: baseUrl + "javascripts/webcomponentsjs",
-            views: baseUrl + "js/views"
-        },
-        shim: {
-            "pouchdb": {
-                exports: "PouchDB"
-            },
-			"pouchdbfind": {
-			deps: ['pouchdb']
-		},
+        var pathname = window.location.pathname;
+        var baseUrl = origin + pathname.toLowerCase().replace("index.html", "");
+        require.config({
+        	baseUrl: baseUrl,
+        	paths: {
+            	aurelia: baseUrl + "javascripts/aurelia",
+			 	pouchdb: baseUrl + "javascripts/pouchdb/pouchdb.min",
+			 	pouchdbfind: baseUrl + "javascripts/pouchdb/pouchdb.find.min",
+			 	papaparse: baseUrl + "javascripts/papaparse/papaparse",
+				webcomponentsjs: baseUrl + "javascripts/webcomponentsjs",
+            	views: baseUrl + "js/views"
+        	},
+        	shim: {
+            	"pouchdb": {
+                	exports: "PouchDB"
+            	},
+				"pouchdbfind": {
+					deps: ['pouchdb']
+			},
 			"papaparse": {
 			exports: "Papa"
 		}
