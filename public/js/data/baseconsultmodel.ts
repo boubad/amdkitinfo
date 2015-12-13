@@ -51,6 +51,9 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 		}
 		return this._allIds;
 	}
+	public set allIds(s:string[]){
+		this._allIds = s;
+	}
 	//
 	protected post_change_item(): Promise<any> {
 		return Promise.resolve(true);
@@ -133,12 +136,15 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			return true;
 		});
 	}// refresh
-	private get_pageStatus(): string {
+	public get_pageStatus(): string {
 		return (this.pagesCount > 1) ?
 			('Page ' + this.currentPage + ' sur ' + this.pagesCount) : null;
 	}
 	public get pageStatus(): string {
 		return (this._pageStatus !== undefined) ? this._pageStatus : null;
+	}
+	public set pageStatus(s:string){
+		this._pageStatus = s;
 	}
 	protected prepare_refresh(): void {
 		this._allIds = [];

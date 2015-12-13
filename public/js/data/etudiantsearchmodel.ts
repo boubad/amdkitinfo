@@ -10,6 +10,8 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 	private _date: string = null;
     private _current_person: IPerson = null;
 	public canFetch: boolean;
+	private _etuds: IPerson[];
+	private _groupes: IGroupe[];
 	//
 	//
 	constructor(info: UserInfo) {
@@ -17,57 +19,30 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 		this.canFetch = true;
 	}// constructor
 	protected get_groupes(): IGroupe[] {
-		return (this.userInfo !== null) ? this.userInfo.groupes : [];
+		return ((this._groupes !== undefined) && (this._groupes !== null)) ? this._groupes : [];
 	}
-	protected get_template(): any {
-		let p = this.currentPerson;
-		let oRet: any = { type: p.type() };
-		if (p.birthDate !== null) {
-			oRet.birthDate = p.birthDate;
-		}
-		if ((p.lastname !== null) && (p.lastname.length > 0)) {
-			oRet.lastname = { $in: p.lastname };
-		}
-		if ((p.firstname !== null) && (p.firstname.length > 0)) {
-			oRet.firstname = { $in: p.firstname };
-		}
-		if ((p.sexe !== null) && (p.sexe.length > 0)) {
-			oRet.sexe = { $in: p.sexe };
-		}
-		if ((p.dossier !== null) && (p.dossier.length > 0)) {
-			oRet.dossier = { $in: p.dossier };
-		}
-		if ((p.ville !== null) && (p.ville.length > 0)) {
-			oRet.ville = { $in: p.ville };
-		}
-		if ((p.etablissement !== null) && (p.etablissement.length > 0)) {
-			oRet.etablissement = { $in: p.etablissement };
-		}
-		if ((p.serieBac !== null) && (p.serieBac.length > 0)) {
-			oRet.serieBac = { $in: p.serieBac };
-		}
-		if ((p.optionBac !== null) && (p.optionBac.length > 0)) {
-			oRet.optionBac = { $in: p.optionBac };
-		}
-		if ((p.mentionBac !== null) && (p.mentionBac.length > 0)) {
-			oRet.mentionBac = { $in: p.mentionBac };
-		}
-		if ((p.etudesSuperieures !== null) && (p.etudesSuperieures.length > 0)) {
-			oRet.etudesSuperieures = { $in: p.etudesSuperieures };
-		}
-		if ((p.apb !== null) && (p.apb.length > 0)) {
-			oRet.apb = { $in: p.apb };
-		}
-		return oRet;
-	}//
+	protected post_update_departement(): Promise<boolean> {
+		return super.post_update_departement().then((r) => {
+			return this.get_departement_groupetps();
+		}).then((gg) => {
+			this._groupes = gg;
+			return true;
+		})
+    }
 	protected get_all_ids(): Promise<string[]> {
 		this.canFetch = false;
+		this._etuds = [];
+		let oRet: string[] = [];
 		let model = this.currentPerson;
 		let selector: any = {};
 		model.to_map(selector);
-		return this.dataService.query_ids(selector).then((rr) => {
+		return this.dataService.query_items(model.type(), selector).then((rr: IPerson[]) => {
+			this._etuds = this.filter_persons(rr);
+			for (let p of this._etuds) {
+				oRet.push(p.id);
+			}
 			this.canFetch = true;
-			return rr;
+			return oRet;
 		}).catch((e) => {
 			this.canFetch = true;
 			return [];
@@ -114,8 +89,28 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 		}// init
 		return oRet;
 	}// filter_persons
+	public refreshAll(): Promise<any> {
+		this.prepare_refresh();
+		let nc = this.itemsPerPage;
+		this.clear_error();
+		return this.get_all_ids().then((ids) => {
+			let oo = ((ids !== undefined) && (ids !== null)) ? ids : [];
+			let nt = oo.length;
+			this.allIds = oo;
+			let np = Math.floor(nt / nc);
+			if ((np * nc) < nt) {
+				++np;
+				this.pagesCount = np;
+			}
+			return this.refresh();
+		}).catch((err) => {
+			this.set_error(err);
+			return false;
+		})
+	}// refreshAll
 	public refresh(): Promise<any> {
 		this.canFetch = false;
+		this.pageStatus = null;
 		this.clear_error();
 		let model = this.modelItem;
 		if (this.items.length > 0) {
@@ -128,42 +123,27 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 			}// elem
 		}
 		this.items = [];
-		let startKey = null;
-		let endKey = null;
-		let nbItems = this.allIds.length;
+		let nbItems = this._etuds.length;
 		let nc = this.itemsPerPage;
 		let istart = (this.currentPage - 1) * nc;
-		if ((istart >= 0) && (istart < nbItems)) {
-			startKey = this.allIds[istart];
+		if (istart < 0) {
+			istart = 0;
 		}
 		let iend = istart + nc - 1;
 		if (iend >= nbItems) {
 			iend = nbItems - 1;
 		}
-		if ((iend >= 0) && (iend < nbItems)) {
-			endKey = this.allIds[iend];
-		}
-		if ((startKey === null) || (endKey === null)) {
-			return Promise.resolve(true);
-		}
-		let ids: string[] = [];
+		let xids: string[] = [];
 		for (let i = istart; i <= iend; ++i) {
-			ids.push(this.allIds[i]);
+			let y = this._etuds[i];
+			let yc = y.etudiantids;
+			if ((yc !== undefined) && (yc !== null) && (yc.length > 0)) {
+				for (let yx of yc) {
+					xids.push(yx);
+				}//yx
+			}
 		}
-		this.clear_error();
-		return this.dataService.get_items_array(ids).then((rrr: IPerson[]) => {
-			let rr = this.filter_persons(rrr);
-			let xids: string[] = [];
-			for (let y of rr) {
-				let yc = y.etudiantids;
-				if ((yc !== undefined) && (yc !== null) && (yc.length > 0)) {
-					for (let yx of yc) {
-						xids.push(yx);
-					}//yx
-				}
-			}// y
-			return this.dataService.get_items_array(xids);
-		}).then((zz: IEtudiant[]) => {
+		return this.dataService.get_items_array(xids).then((zz: IEtudiant[]) => {
 			return this.retrieve_avatars(zz);
 		}).then((xx: IEtudiant[]) => {
 			this.items = [];
@@ -172,8 +152,8 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 					this.add_item_to_array(this.items, x);
 				}
 			}
-			this.sort_array(this.items);
 			this.canFetch = true;
+			this.pageStatus = this.get_pageStatus();
 			return true;
 		}).catch((e) => {
 			this.canFetch = true;
