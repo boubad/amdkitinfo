@@ -1,0 +1,84 @@
+<template>
+	<section class="au-animate">
+		<table if.bind="is_connected">
+			<tr>
+				<td style="text-align:center">
+					<connect-bar></connect-bar>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:center">
+					<sheader-bar></sheader-bar>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:center">
+					<affect-bar></affect-bar>
+				</td>
+			</tr>
+			<tr if.bind="canShowForm">
+				<td>
+					<table>
+						<tr>
+							<td style="vertical-align:top">
+								<div class="form-group">
+									<label class="form-label" for="persons">Etudiants</label>
+									<select id="persons" multiple value.bind="currentPersons" size="16">
+										<option repeat.for="pers of persons" model.bind="pers">${pers.text}</option>
+									</select>
+								</div>
+							</td>
+							<td>&nbsp;</td>
+							<td style="vertical-align:top">
+								<div>
+									<a class="btn btn-primary" click.delegate="refreshAll()" href="#">
+										<i class="fa fa-refresh fa-fw"></i>Rafraîchir
+									</a>
+								</div>
+								<div class="form-group">
+									<label class="form-label" for="startDate">Date de début</label>
+									<input class="form-control" type="date" id="startDate" value.bind="allStartDate" min.bind="minDate" max.bind="maxDate" required></input>
+								</div>
+								<div class="form-group">
+									<label class="form-label" for="endDate">Date de fin</label>
+									<input class="form-control" type="date" id="endDate" value.bind="allEndDate" min.bind="minDate" max.bind="maxDate" required></input>
+								</div>
+								<div class="btn-group">
+									<a class="btn btn-primary" show.bind="canSave" click.delegate="save()" href="#">
+										<i class="fa fa-save fa-fw"></i>Ajouter
+									</a>
+									<a class="btn btn-danger" show.bind="canRemove" click.delegate="remove()" href="#">
+										<i class="fa fa-trash-o fa-fw"></i>Supprimer
+									</a>
+								</div>
+							</td>
+							<td>&nbsp;</td>
+							<td if.bind="hasItems" style="vertical-align:top">
+								<ul class="pagination" if.bind="hasPages">
+									<li>
+										<a href="#" click.delegate="firstPage()" show.bind="canPrevPage">Début</a>
+									</li>
+									<li>
+										<a href="#" click.delegate="prevPage()" show.bind="canPrevPage">Préc.</a>
+									</li>
+									<li>
+										<a href="#" click.delegate="nextPage()" show.bind="canNextPage">Suivant</a>
+									</li>
+									<li>
+										<a href="#" click.delegate="lastPage()" show.bind="canNextPage">Fin</a>
+									</li>
+								</ul>
+								<div class="form-group">
+									<label class="form-label" for="affectations">Affectations</label>
+									<select id="affectations" multiple value.bind="currentAffectations" size="16">
+										<option repeat.for="elem of items" model.bind="elem">${elem.text}</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</section>
+</template>

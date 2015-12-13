@@ -1,0 +1,16 @@
+{
+  "name": "infoapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "author": "Boubacar Diarra",
+  "license": "GNU",
+  "dependencies": {
+		"body-parser": "*",
+    "cookie-parser": "*",
+    "debug": "*",
+    "express": "*",
+    "morgan": "*",
+    "serve-favicon": "*"
+  }
+}
