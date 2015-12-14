@@ -91,7 +91,8 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
         let self = this;
         return this.retrieve_avatars(oRet).then((pp: IDisplayEtudiant[]) => {
             self.items = pp;
+			this.pageStatus = this.get_pageStatus();
             return true;
-        })
+        });
     }// refresh
 }// class BaseEditViewModel
