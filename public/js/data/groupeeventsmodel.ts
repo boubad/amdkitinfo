@@ -64,25 +64,22 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		return (this.userInfo !== null) ? this.userInfo.groupes : [];
 	}
 	public get evtMode(): boolean {
-		return ((this._evtMode !== undefined) && (this._evtMode !== null)) ?
-			this._evtMode && this.is_connected : false;
+		return this._evtMode;
 	}
 	public set evtMode(s: boolean) {
-		this._evtMode = s;
+		this._evtMode = ((s !== undefined) && (s !== null)) ? s : false;
 	}
 	public get editMode(): boolean {
-		return ((this._editMode !== undefined) && (this._editMode !== null)) ?
-			this._editMode && this.is_connected : false;
+		return this._editMode;
 	}
 	public set editMode(s: boolean) {
-		this._editMode = s;
+		this._editMode =  ((s !== undefined) && (s !== null)) ? s : false;
 	}
 	public get noteMode(): boolean {
-		return ((this._noteMode !== undefined) && (this._noteMode !== null)) ?
-			this._noteMode && this.is_connected : false;
+		return this._noteMode;
 	}
 	public set noteMode(s: boolean) {
-		this._noteMode = s;
+		this._noteMode = ((s !== undefined) && (s !== null)) ? s : false;
 	}
 	protected get profAffectations(): IEnseignantAffectation[] {
         if ((this._profaffectations === undefined) || (this._profaffectations === null)) {
@@ -121,9 +118,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 	}
 	public set xgenre(s: string) {
 		this._xgenre = ((s !== undefined) && (s !== null)) ? s : GVT_TP;
-		if (this.currentItem !== null) {
-			this.currentItem.genre = this._xgenre;
-		}
+		this.currentItem.genre = this._xgenre;
 	}
     protected get profaffectationid(): string {
         let x = this.currentProfAffectation;
@@ -184,10 +179,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         this._current_etudaffectations = ((s !== undefined) && (s !== null)) ? s : [];
     }
 	protected update_profaffectation(): any {
-        if (this._bBusy) {
-            return false;
-        }
-        this._bBusy = true;
         this.currentProfAffectation = null;
         let semid: string = this.semestreid;
         let matid: string = this.matiereid;
@@ -199,12 +190,12 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
                 break;
             }
         }// a
-		if ((this.currentItem !== null) && (this.currentItem.rev == null)) {
+		if (this.currentItem.rev == null) {
 			let id = (this.currentProfAffectation !== null) ? this.currentProfAffectation.id : null;
 			this.currentItem.profaffectationid = id;
 		}
 		let xid: string = null;
-		if ((this.currentItem !== null) && (this.currentItem.profaffectationid !== null)) {
+		if (this.currentItem.profaffectationid !== null) {
 			xid = this.currentItem.profaffectationid;
 			if (xid === undefined) {
 				xid = null;
@@ -216,7 +207,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		if (xid == null) {
 			this.edit_mode();
 		}
-        this._bBusy = false;
         return true;
     }//update_profaffectation
 	protected fill_etudaffectations(): Promise<any> {
@@ -230,9 +220,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         this.currentEtudAffectations = [];
         this.etudAffectations = [];
 		if (this.currentProfAffectation == null) {
-			return Promise.resolve(true);
-		}
-		if (this.currentItem == null) {
 			return Promise.resolve(true);
 		}
 		if (this.currentItem.profaffectationid != this.currentProfAffectation.id) {
@@ -254,19 +241,8 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		})
     }// fill_etudaffectations
     protected fill_notes(): Promise<any> {
-		if (this._bBusy) {
-			return Promise.resolve(true);
-		}
-		this._bBusy = true;
-        this._notes = [];
-        this._evts = [];
-        this._all_notes = [];
-        this.etudEvents = [];
-        this.allNotes = [];
-        let x = this.currentItem;
-        let id = (x !== null) ? x.id : null;
+        let id = this.currentItem.id;
         if (id === null) {
-			this._bBusy = false;
             return Promise.resolve(true);
         }
         return this.dataService.query_items(this.eventModel.type(), { groupeeventid: id }).then((e1: IEtudiantEvent[]) => {
@@ -287,10 +263,8 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
                 this._evts = oRet2;
             }// ee
             this.compute_all_notes();
-			this._bBusy = false;
             return true;
         }).catch((e) => {
-			this._bBusy = false;
 			return false;
 		});
     }
@@ -367,7 +341,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		if ((info === undefined) || (info === null)) {
 			return Promise.resolve(false);
 		}
-        let self = this;
 		this._profaffectations = [];
         this._current_affectation = null;
 		this._xdeps = [];
@@ -400,12 +373,10 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			if (this._xdeps.length > 0) {
 				this.departement = this._xdeps[0];
 			}
-			if (self.etudEvtGenre === null) {
-                self.etudEvtGenre = EVT_ABSENCE;
+			if (this.etudEvtGenre === null) {
+                this.etudEvtGenre = EVT_ABSENCE;
             }
 			return this.update_profaffectation();
-		}).then((r2) => {
-			return this.fill_notes();
 		});
     }// perform_activate
     public get isEditable(): boolean {
@@ -620,11 +591,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			this.update_profaffectation();
 			return this.fill_etudaffectations();
 		}).then((xr) => {
-			if (!this.in_activate) {
-				return this.refreshAll();
-			} else {
-				return Promise.resolve(true);
-			}
+			return this.refreshAll();
         });
     }
     protected post_update_semestre(): Promise<boolean> {
@@ -634,44 +601,34 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			this.update_profaffectation();
 			return this.fill_etudaffectations();
 		}).then((r) => {
-			if (!this.in_activate) {
-				return this.refreshAll();
-			} else {
-				return Promise.resolve(true);
-			}
+			return this.refreshAll();
         });
     }
     protected post_update_matiere(): Promise<boolean> {
 		return super.post_update_matiere().then((rx) => {
 			this.modelItem.matiereid = this.matiereid;
 			this.update_profaffectation();
-			if (!this.in_activate) {
-				return this.refreshAll();
-			} else {
-				return Promise.resolve(true);
-			}
+			return this.refreshAll();
 		});
     }
     protected post_change_item(): Promise<any> {
-        return super.post_change_item().then((r) => {
-			let item = this.currentItem;
-			if (item != null) {
-				if (item.avatarid == null) {
-					item.avatarid = this.person.avatarid;
+		let item = this.currentItem;
+		if (item != null) {
+			if (item.avatarid == null) {
+				item.avatarid = this.person.avatarid;
+			}
+			let id = (this.currentItem != null) ? this.currentItem.genre : null;
+			let aa = this.xgenres;
+			let p: string = null;
+			for (let x of aa) {
+				if (x == id) {
+					p = x;
+					break;
 				}
-				let id = (this.currentItem != null) ? this.currentItem.genre : null;
-				let aa = this.xgenres;
-				let p: string = null;
-				for (let x of aa) {
-					if (x == id) {
-						p = x;
-						break;
-					}
-				}
-				this.xgenre = p;
-			}// item
-			return this.retrieve_one_avatar(item);
-		}).then((rx) => {
+			}
+			this.xgenre = p;
+		}// item
+		return this.retrieve_one_avatar(item).then((rx) => {
 			return this.fill_etudaffectations();
         }).then((rx) => {
 			return this.fill_notes();
@@ -776,7 +733,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         }
         let oRet: IEtudiantEvent[] = [];
         let affs = this.etudAffectations;
-		let selectedAffes:IEtudiantAffectation[] = [];
+		let selectedAffes: IEtudiantAffectation[] = [];
         for (let a of affs) {
             if (a.selected) {
 				selectedAffes.push(a);
@@ -850,7 +807,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         }
         this.clear_error();
         return Promise.all(oRet).then((rr) => {
-			 for (let aa of oRet) {
+			for (let aa of oRet) {
                 aa.selected = false;
             }
             return this.fill_notes();
@@ -905,23 +862,59 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		});
 	}// save
 	public refresh(): Promise<any> {
-		return super.refresh().then((r) => {
-			let rev: string = null;
-			if (this.currentItem !== null) {
-				rev = this.currentItem.rev;
-			}
-			if (rev == null) {
-				if (this.items.length > 0) {
-					this.currentItem = this.items[0];
+		if (this._bBusy) {
+			return;
+		}
+		this._bBusy = true;
+		this.clear_error();
+		if (this.items.length > 0) {
+			for (let elem of this.items) {
+				let x = elem.url;
+				if (x !== null) {
+					this.revokeUrl(x);
+					elem.url = null;
 				}
-			} else if (rev.trim().length < 1) {
-				if (this.items.length > 0) {
-					this.currentItem = this.items[0];
-				}
+			}// elem
+		}
+		this.items = [];
+		let nbItems = this.allIds.length;
+		if (nbItems < 1) {
+			return Promise.resolve(true);
+		}
+		let nc = this.itemsPerPage;
+		let istart = (this.currentPage - 1) * nc;
+		if (istart < 0) {
+			istart = 0;
+		}
+		let iend = istart + nc - 1;
+		if (iend >= nbItems) {
+			iend = nbItems - 1;
+		}
+		let xids: string[] = [];
+		for (let i = istart; i <= iend; ++i) {
+			xids.push(this.allIds[i]);
+		}
+		let oldid: string = this.currentItem.id;
+		return this.dataService.get_items_array(xids).then((rr: IGroupeEvent[]) => {
+			let rx = ((rr !== undefined) && (rr !== null)) ? rr : [];
+			return this.retrieve_avatars(rx);
+		}).then((xx: IGroupeEvent[]) => {
+			this.items = [];
+			for (let xc of xx) {
+				this.add_item_to_array(this.items, xc);
 			}
-			return this.fill_notes();
-		});
-	}
+			let p = this.sync_array(this.items, oldid);
+			this.currentItem = p;
+			this.pageStatus = this.get_pageStatus();
+			//return this.fill_notes();
+		}).then((xx) => {
+			this._bBusy = false;
+			return true;
+		}).catch((e) => {
+			this._bBusy = false;
+			return true;
+		})
+	}// refresh
 	private get_semestre_groupe_etudaffectations(sem: ISemestre, grp: IGroupe): Promise<IEtudiantAffectation[]> {
 		let oRet: IEtudiantAffectation[] = [];
 		if ((sem === undefined) || (sem === null) || (grp === undefined) || (grp === null)) {
