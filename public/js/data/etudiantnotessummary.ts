@@ -178,11 +178,11 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 		}
 		if (this._detailNotes.has(semid)) {
 			let v = this._detailNotes.get(semid);
-			v.add(grpName, n, c, evt.description,grpid);
+			v.add(grpName, n, c, evt.description,null,grpid);
 		} else {
 			let v = new SummaryItemMap(evt.semestreName);
 			this._detailNotes.set(semid, v);
-			v.add(grpName, n, c, evt.description,grpid);
+			v.add(grpName, n, c, evt.description,null,grpid);
 		}
 		//
 		if ((this._matieresNotes === undefined) || (this._matieresNotes === null)) {
@@ -190,11 +190,11 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 		}
 		if (this._matieresNotes.has(semid)) {
 			let v = this._matieresNotes.get(semid);
-			v.add(matiereSigle, n, c, evt.description, matiereid);
+			v.add(matiereSigle, n, c, evt.description, null,matiereid);
 		} else {
 			let v = new SummaryItemMap(evt.semestreName);
 			this._matieresNotes.set(semid, v);
-			v.add(matiereSigle, n, c, evt.description, matiereid);
+			v.add(matiereSigle, n, c, evt.description, null,matiereid);
 		}
 		return true;
 	}// add_event
@@ -217,7 +217,7 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 				let uniteid = self._matieresUnites.get(matiereid);
 				let uniteSigle = ss.get(uniteid);
 				let n = nx.note;
-				mm.add(uniteSigle, n, matierecoef, null,uniteid);
+				mm.add(uniteSigle, n, matierecoef, null,null,uniteid);
 			}// nx
 		});
 	}// compute_unites_notes

@@ -29,6 +29,7 @@ export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
     private _count: number;
     private _sumcoefs: number;
     private _sumdata: number;
+	private _descriptions: string[];
     //
     constructor(oMap?: any) {
         super(oMap);
@@ -205,6 +206,13 @@ export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
         return ((1000.0 * this.miscCount) + (100.0 * this.absencesCount) +
             (10.0 * this.retardsCount));
     }
+	public get descriptions():string[] {
+		return ((this._descriptions !== undefined) && (this._descriptions !== null)) ?
+		this._descriptions : [];
+	}
+	public get has_descriptions():boolean {
+		return (this.descriptions.length > 0);
+	}
     public get absenceString(): string {
         return (this.absencesCount > 0) ? "" + this.absencesCount : "";
     }
@@ -223,6 +231,17 @@ export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
     public get noteString(): string {
         return this.number_to_string(this.note);
     }
+	private check_desc(p: IEtudiantEvent): void {
+		let s = p.description;
+		if ((s !== undefined) && (s !== null) && (s.trim().length > 0)) {
+			let sx:string = this.date_to_string(p.eventDate) + ": " + s;
+			if ((this._descriptions === undefined) || (this._descriptions === null)) {
+				this._descriptions = [sx];
+			} else {
+				this._descriptions.push(sx);
+			}
+		}
+	}
     public add_event(p: IEtudiantEvent): void {
         if ((p !== undefined) && (p !== null) && (p.genre !== undefined) && (p.genre !== null)) {
             let s: string = ((p.description !== undefined) && (p.description !== null) &&
@@ -238,6 +257,7 @@ export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
             if (p.genre == EVT_NOTE) {
                 this.add_note(p.note, p.coefficient);
             } else {
+				this.check_desc(p);
                 this.add_event_misc(p.genre);
             }
         }
@@ -273,7 +293,7 @@ export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
         return ((this.lastname !== null) && (this.firstname !== null)) ?
             (this.lastname + ' ' + this.firstname) : null;
     } // fullname
-    public  sort_func(p1: IDisplayEtudiant, p2: IDisplayEtudiant): number {
+    public sort_func(p1: IDisplayEtudiant, p2: IDisplayEtudiant): number {
         let s1 = p1.fullname;
         let s2 = p2.fullname;
         if ((s1 !== null) && (s2 !== null)) {

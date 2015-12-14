@@ -47,7 +47,11 @@
 						<td>${note.absenceString}</td>
 						<td>${note.retardString}</td>
 						<td>${note.miscString}</td>
-						<td>${note.description}</td>
+						<td>
+							<ul>
+								<li repeat.for="r of note.descriptions">${r}</li>
+							</ul>
+						</td>
 					</tr>
 				</table>
 			</td>

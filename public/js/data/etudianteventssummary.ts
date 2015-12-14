@@ -74,7 +74,7 @@ export class EtudiantEventsSummary extends BaseEtudiantSumary {
 		} else {
 			m = this._semestreEvents.get(semid);
 		}
-		m.add(evt.genre, null, null, evt.description);
+		m.add(evt.genre, null, null, evt.description,evt.eventDate);
 		return true;
 	}// add_event
 	public get_semestre_all_evts(semestreid: string): IEtudiantEvent[] {

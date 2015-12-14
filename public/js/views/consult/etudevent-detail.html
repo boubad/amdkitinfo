@@ -56,7 +56,7 @@
 					<div class="form-group">
 						<label class="form-label" for="eventDate">Date</label>
 						<input class="form-control" type="date" id="eventDate" value.bind="eventDate" disabled.bind="cannotEdit" min.bind="minDate"
-						max.bind="maxDate" required></input>
+						max.bind="maxDate" readonly></input>
 					</div>
 					<div class="form-group" if.bind="is_event">
 						<label class="form-label" for="etudevtgenre">Genre</label>
@@ -72,7 +72,7 @@
 					</div>
 					<div class="form-group">
 						<label class="form-label" for="description">observations</label>
-						<textarea class="form-control" id="description" value.bind="observations" disabled.bind="cannotEdit"></textarea>
+						<textarea class="form-control" id="description" value.bind="description" disabled.bind="cannotEdit"></textarea>
 					</div>
 					<div class="btn-group" show.bind="canSave">
 						<a class="btn btn-primary" click.delegate="save()" href="#">

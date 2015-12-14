@@ -62,6 +62,9 @@ export class SummaryItem {
 	public get descriptions(): string[] {
         return ((this._desc !== undefined) && (this._desc !== null)) ? this._desc : [];
     }
+	public get has_descriptions():boolean {
+		return (this.descriptions.length > 0);
+	}
 	public get count(): number {
         return ((this._count !== undefined) && (this._count !== null) && (this._count > 0)) ? this._count : null;
     }
@@ -102,13 +105,13 @@ export class SummaryItem {
 		}
 		return true;
 	}// add_desc
-	public add(n: number, c?: number, desc?: string): boolean {
+	public add(n: number, c?: number, desc?: string, d?:Date): boolean {
 		let bRet = false;
 		if ((n !== undefined) && (n !== null) && (n >= 0.0)) {
 			bRet = this.add_number(n, c);
 		}
 		if ((desc !== undefined) && (desc !== null) && (desc.trim().length > 0)) {
-			bRet = bRet || this.add_desc(desc);
+			bRet = bRet || this.add_desc(desc,d);
 		}
 		if ((this._count === undefined) || (this._count === null)) {
 			this._count = 0;
@@ -151,7 +154,7 @@ export class SummaryItemMap {
         });
         return oRet;
     }// get_values
-    public add(item: string, n?: number, c?: number, desc?: string, xref?: string): void {
+    public add(item: string, n?: number, c?: number, desc?: string, d?:Date,xref?: string): void {
         if ((item !== undefined) && (item !== null)) {
             let xi: SummaryItem = null;
             if (!this._notesMap.has(item)) {
@@ -160,7 +163,7 @@ export class SummaryItemMap {
             } else {
                 xi = this._notesMap.get(item);
             }
-            xi.add(n, c, desc);
+            xi.add(n, c, desc,d);
         }// item
     }// add
 }// EventItemMap
