@@ -302,4 +302,14 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
             x.birthYear = this.string_to_number(s);
         }
     }
+	public activate(params?: any, config?: any, instruction?: any): any {
+		this.in_activate = true;
+		return this.perform_activate().then((x) => {
+			this.in_activate = false;
+			return true;
+		}).catch((e) => {
+			this.in_activate = false;
+			return false;
+		});
+	}// activate
 }// class EtudiantSearchModel

@@ -1,110 +1,108 @@
 <template>
-	<section class="au-animate">
-		<table if.bind="is_connected">
-			<tr>
-				<td style="text-align:center">
-					<connect-bar></connect-bar>
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align:center">
-					<sheader-bar></sheader-bar>
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align:center">
-					<ul class="pagination">
-						<li if.bind="can_profil">
-							<a class="btn btn-primary" click.delegate="set_profil()" href="#">
-								<i class="fa fa-user fa-fw"></i>Profil
-							</a>
-						</li>
-						<li if.bind="can_password">
-							<a class="btn btn-primary" click.delegate="set_password()" href="#">
-								<i class="fa fa-lock fa-fw"></i>Mot de passe
-							</a>
-						</li>
-						<li if.bind="can_avatar">
-							<a class="btn btn-primary" click.delegate="set_avatar()" href="#">
-								<i class="fa fa-image fa-fw"></i>Avatar
-							</a>
-						</li>
-					</ul>
-				</td>
-			</tr>
-			<tr if.bind="profilMode" style="text-align:center">
-				<td style="text-align:center">
-					<form role="form">
-						<div class="form-group">
-							<label class="form-label" for="lastname">Nom de famille</label>
-							<input type="text" class="form-control" id="lastname" value.bind="lastname" />
-						</div>
-						<div class="form-group">
-							<label class="form-label" for="firstname">Prénom(s)</label>
-							<input type="text" class="form-control" id="firstname" value.bind="firstname" />
-						</div>
-						<div class="form-group">
-							<label class="form-label" for="email">Courriel</label>
-							<input type="email" class="form-control" id="email" value.bind="email" />
-						</div>
-						<div class="form-group">
-							<label class="form-label" for="phone">Téléphone</label>
-							<input type="text" class="form-control" id="phone" value.bind="phone" />
-						</div>
-						<div class="form-group">
-							<label class="form-label" for="description">Remarques</label>
-							<textarea class="form-control" id="description" value.bind="description"></textarea>
-						</div>
-						<div class="btn-group">
-							<a class="btn btn-primary" click.delegate="saveData()" href="#" show.bind="canSaveData">
-								<i class="fa fa-save fa-fw"></i>Modifier
-							</a>
-						</div>
-					</form>
-				</td>
-			</tr>
-			<tr if.bind="avatarMode" style="text-align:center">
-				<td style="text-align:center">
-					<div if.bind="has_old_url">
-						<img src.bind="old_url" height="128"></img>
-						<a class="btn btn-danger" click.delegate="remove()" href="#" show.bind="canRemove">
-							<i class="fa fa-trash-o fa-fw"></i>Supprimer
+	<table if.bind="is_connected">
+		<tr>
+			<td style="text-align:center">
+				<connect-bar></connect-bar>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center">
+				<sheader-bar></sheader-bar>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center">
+				<ul class="pagination">
+					<li if.bind="can_profil">
+						<a class="btn btn-primary" click.delegate="set_profil()" href="#">
+							<i class="fa fa-user fa-fw"></i>Profil
+						</a>
+					</li>
+					<li if.bind="can_password">
+						<a class="btn btn-primary" click.delegate="set_password()" href="#">
+							<i class="fa fa-lock fa-fw"></i>Mot de passe
+						</a>
+					</li>
+					<li if.bind="can_avatar">
+						<a class="btn btn-primary" click.delegate="set_avatar()" href="#">
+							<i class="fa fa-image fa-fw"></i>Avatar
+						</a>
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr if.bind="profilMode" style="text-align:center">
+			<td style="text-align:center">
+				<form role="form">
+					<div class="form-group">
+						<label class="form-label" for="lastname">Nom de famille</label>
+						<input type="text" class="form-control" id="lastname" value.bind="lastname" />
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="firstname">Prénom(s)</label>
+						<input type="text" class="form-control" id="firstname" value.bind="firstname" />
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="email">Courriel</label>
+						<input type="email" class="form-control" id="email" value.bind="email" />
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="phone">Téléphone</label>
+						<input type="text" class="form-control" id="phone" value.bind="phone" />
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="description">Remarques</label>
+						<textarea class="form-control" id="description" value.bind="description"></textarea>
+					</div>
+					<div class="btn-group">
+						<a class="btn btn-primary" click.delegate="saveData()" href="#" show.bind="canSaveData">
+							<i class="fa fa-save fa-fw"></i>Modifier
 						</a>
 					</div>
-					<form role="form">
-						<div class="form-group">
-							<i class="fa fa-user fa-fw"></i>
-							<input type="file" id="fileToUpload" accept="image/png, image/jpeg" change.delegate="fileChanged($event)"></input>
-						</div>
-					</form>
-					<div if.bind="has_current_url">
-						<img src.bind="current_url" height="128"></img>
-						<a class="btn btn-primary" click.delegate="save()" href="#" show.bind="canSave">
-							<i class="fa fa-save fa-fw"></i>Enregistrer
+				</form>
+			</td>
+		</tr>
+		<tr if.bind="avatarMode" style="text-align:center">
+			<td style="text-align:center">
+				<div if.bind="has_old_url">
+					<img src.bind="old_url" height="128"></img>
+					<a class="btn btn-danger" click.delegate="remove()" href="#" show.bind="canRemove">
+						<i class="fa fa-trash-o fa-fw"></i>Supprimer
+					</a>
+				</div>
+				<form role="form">
+					<div class="form-group">
+						<i class="fa fa-user fa-fw"></i>
+						<input type="file" id="fileToUpload" accept="image/png, image/jpeg" change.delegate="fileChanged($event)"></input>
+					</div>
+				</form>
+				<div if.bind="has_current_url">
+					<img src.bind="current_url" height="128"></img>
+					<a class="btn btn-primary" click.delegate="save()" href="#" show.bind="canSave">
+						<i class="fa fa-save fa-fw"></i>Enregistrer
+					</a>
+				</div>
+			</td>
+		</tr>
+		<tr if.bind="passwordMode" style="text-align:center">
+			<td style="text-align:center">
+				<form role="form">
+					<div class="form-group">
+						<label class="form-label" for="newpwd">Nouveau mot de passe</label>
+						<input type="password" class="form-control" id="newpwd" value.bind="newPassword" placeholder="Nouveau mot de passe" />
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="confirmpwd">Confirmation nouveau mot de passe</label>
+						<input type="password" class="form-control" id="confirmpwd" value.bind="confirmPassword" placeholder="Confirmation mot de passe"
+						/>
+					</div>
+					<div class="btn-group">
+						<a class="btn btn-primary" click.delegate="changePwd()" href="#" show.bind="canChangePwd">
+							<i class="fa fa-save fa-fw"></i>Changer mot de passe
 						</a>
 					</div>
-				</td>
-			</tr>
-			<tr if.bind="passwordMode" style="text-align:center">
-				<td style="text-align:center">
-					<form role="form">
-						<div class="form-group">
-							<label class="form-label" for="newpwd">Nouveau mot de passe</label>
-							<input type="password" class="form-control" id="newpwd" value.bind="newPassword" placeholder="Nouveau mot de passe" />
-						</div>
-						<div class="form-group">
-							<label class="form-label" for="confirmpwd">Confirmation nouveau mot de passe</label>
-							<input type="password" class="form-control" id="confirmpwd" value.bind="confirmPassword" placeholder="Confirmation mot de passe"
-							/>
-						</div>
-						<div class="btn-group">
-							<a class="btn btn-primary" click.delegate="changePwd()" href="#" show.bind="canChangePwd">
-								<i class="fa fa-save fa-fw"></i>Changer mot de passe
-							</a>
-						</div>
-					</form>
-				</td>
-			</tr>
-		</table>
-	</section>
+				</form>
+			</td>
+		</tr>
+	</table>
 </template>

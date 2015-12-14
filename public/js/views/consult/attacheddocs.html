@@ -1,80 +1,78 @@
 <template>
-	<section class="au-animate">
-		<table if.bind="is_connected">
-			<tr>
-				<td style="vertical-align:top">
-					<connect-bar></connect-bar>
-				</td>
-			</tr>
-			<tr>
-				<td style="vertical-align:top">
-					<sheader-bar></sheader-bar>
-				</td>
-			</tr>
-			<tr>
-				<td if.bind="has_docs" style="vertical-align:top">
-					<select value.bind="currentDoc" size="16">
-						<option repeat.for="elem of docs" model.bind="elem">${elem.title}</option>
-					</select>
-				</td>
-				<td>&nbsp;&nbsp;</td>
-				<td style="vertical-align:top">
-					<table>
-						<tr>
-							<td style="text-align:center" if.bind="isEditable">
-								<i class="fa fa-upload fa-fw"></i>
-								<input type="file" id="fileToUpload" change.delegate="avatarFileChanged($event)"></input>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<table>
-									<tr>
-										<td if.bind="has_ref">
-											<a href.bind="linkRef" type.bind="linkType">
-												<i class="fa fa-download fa-fw"></i>${linkText}
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<td if.bind="canSave">
-											<a class="btn btn-primary" click.delegate="save()" href="#">
-												<i class="fa fa-save fa-fw"></i>Enregistrer
-											</a>
-										</td>
-										<td if.bind="canRemove">
-											<a class="btn btn-danger" click.delegate="remove()" href="#">
-												<i class="fa fa-trash-o fa-fw"></i>Supprimer
-											</a>
-										</td>
-									</tr>
-								</table>
-							</td>
-							<td>&nbsp;&nbsp;</td>
-							<td>
-								<form role="form">
-									<div class="form-group">
-										<label class="form-label" for="docName">Fichier</label>
-										<input class="form-control" type="text" id="docName" value.bind="docName" readonly></input>
-									</div>
-									<div class="form-group">
-										<label class="form-label" for="docType">Type</label>
-										<input class="form-control" type="text" id="docType" value.bind="docType" readonly></input>
-									</div>
-									<div class="form-group">
-										<label class="form-label" for="docTitle">Titre</label>
-										<input class="form-control" type="text" id="docTitle" value.bind="docTitle" placeholder="Titre"></input>
-									</div>
-									<div class="form-group">
-										<label class="form-label" for="description">Description</label>
-										<textarea class="form-control" id="description" value.bind="docDescription"></textarea>
-									</div>
-								</form>>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</section>
+	<table if.bind="is_connected">
+		<tr>
+			<td style="vertical-align:top">
+				<connect-bar></connect-bar>
+			</td>
+		</tr>
+		<tr>
+			<td style="vertical-align:top">
+				<sheader-bar></sheader-bar>
+			</td>
+		</tr>
+		<tr>
+			<td if.bind="has_docs" style="vertical-align:top">
+				<select value.bind="currentDoc" size="16">
+					<option repeat.for="elem of docs" model.bind="elem">${elem.title}</option>
+				</select>
+			</td>
+			<td>&nbsp;&nbsp;</td>
+			<td style="vertical-align:top">
+				<table>
+					<tr>
+						<td style="text-align:center" if.bind="isEditable">
+							<i class="fa fa-upload fa-fw"></i>
+							<input type="file" id="fileToUpload" change.delegate="avatarFileChanged($event)"></input>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table>
+								<tr>
+									<td if.bind="has_ref">
+										<a href.bind="linkRef" type.bind="linkType">
+											<i class="fa fa-download fa-fw"></i>${linkText}
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td if.bind="canSave">
+										<a class="btn btn-primary" click.delegate="save()" href="#">
+											<i class="fa fa-save fa-fw"></i>Enregistrer
+										</a>
+									</td>
+									<td if.bind="canRemove">
+										<a class="btn btn-danger" click.delegate="remove()" href="#">
+											<i class="fa fa-trash-o fa-fw"></i>Supprimer
+										</a>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td>&nbsp;&nbsp;</td>
+						<td>
+							<form role="form">
+								<div class="form-group">
+									<label class="form-label" for="docName">Fichier</label>
+									<input class="form-control" type="text" id="docName" value.bind="docName" readonly></input>
+								</div>
+								<div class="form-group">
+									<label class="form-label" for="docType">Type</label>
+									<input class="form-control" type="text" id="docType" value.bind="docType" readonly></input>
+								</div>
+								<div class="form-group">
+									<label class="form-label" for="docTitle">Titre</label>
+									<input class="form-control" type="text" id="docTitle" value.bind="docTitle" placeholder="Titre"></input>
+								</div>
+								<div class="form-group">
+									<label class="form-label" for="description">Description</label>
+									<textarea class="form-control" id="description" value.bind="docDescription"></textarea>
+								</div>
+							</form>>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
 </template>

@@ -21,6 +21,7 @@ export class HomeModel extends BaseView {
 	//
 	constructor(info: UserInfo) {
 		super(info);
+		this.title= 'Connexion';
 		this._bInitialized = false;
 	}
 	//
@@ -55,6 +56,9 @@ export class HomeModel extends BaseView {
 	}
 	public get has_splash_image(): boolean {
 		return (this.splash_image !== null);
+	}
+	public get has_login_image():boolean {
+		return (this.login_image !== null);
 	}
 	private home_image(): string {
 		if (this.is_super) {

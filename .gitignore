@@ -1,7 +1,5 @@
 ## jspm ignores
 node_modules
-jspm_packages
-bower_components
 .DS_STORE
 .c9
 .zedstate

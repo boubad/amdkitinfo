@@ -52,7 +52,7 @@ export class BaseConsultBar<T extends IBaseItem> extends BaseBar<BaseConsultView
     public get canPrevPage(): boolean {
         return (this.parent !== null) ? this.parent.canPrevPage : false;
     }
-    public get canBextPage(): boolean {
+    public get canNextPage(): boolean {
         return (this.parent !== null) ? this.parent.canNextPage : false;
     }
     public firstPage(): void {
