@@ -1,0 +1,195 @@
+CACHE MANIFEST
+ # Version 1.0.2
+ CACHE:
+ index.html
+ favicon.ico
+ images/admin.jpg
+ images/etudiant.jpg
+ images/home.jpg
+ images/login.jpg
+ images/oper.jpg
+ styles/bootstrap/css/bootstrap.min.css 
+ styles/fontawesome/css/font-awesome.min.css 
+ styles/fontawesome/fonts/fontawesome-webfont.woff2?v=4.3.0
+ styles/styles.css
+ javascripts/lie/lie.polyfill.min.js 
+ javascripts/pouchdb/pouchdb.min.js 
+ javascripts/pouchdb/pouchdb.find.min.js 
+ javascripts/papaparse/papaparse.js
+ javascripts/webcomponentsjs/webcomponents.js 
+ javascripts/requirejs/require.js 
+ javascripts/aurelia/aurelia-bundle-latest.js
+ js/views/main.js 
+ js/views/app.js
+ js/views/app.html 
+ js/views/resources/index.js 
+ js/views/resources/nav-bar.js 
+ js/views/resources/connect-bar.js 
+ js/views/resources/sheader-bar.js 
+js/views/resources/pagination-bar.js 
+js/views/resources/elements-bar.js 
+js/views/resources/avatar-bar.js 
+js/views/resources/command-bar.js
+js/views/resources/siglename-bar.js 
+js/views/resources/interval-bar.js 
+js/views/resources/depart-bar.js 
+js/views/resources/depannee-bar.js 
+js/views/resources/depunite-bar.js 
+js/views/resources/work-bar.js 
+js/views/resources/person-bar.js 
+js/views/resources/affect-bar.js
+js/views/resources/import-bar.js 
+js/views/resources/basebar.js 
+js/views/resources/baseconsultbar.js 
+js/views/resources/baseeditbar.js 
+js/views/resources/nav-bar.html 
+js/views/resources/connect-bar.html 
+js/views/resources/sheader-bar.html 
+js/views/resources/pagination-bar.html 
+js/views/resources/elements-bar.html 
+js/views/resources/avatar-bar.html 
+js/views/resources/command-bar.html 
+js/views/resources/siglename-bar.html 
+js/views/resources/interval-bar.html 
+js/views/resources/depart-bar.html
+js/views/resources/depannee-bar.html 
+js/views/resources/depunite-bar.html 
+js/views/resources/work-bar.html 304
+js/views/resources/person-bar.html 
+js/views/resources/affect-bar.html 
+js/views/resources/import-bar.html
+js/views/common/infouimanager.js 
+js/views/common/infouserinfo.js 
+js/views/common/home.js 
+js/views/common/home.html 
+js/views/common/profil.js 
+js/views/common/profil.html 
+js/views/common/synchro-view.js 
+js/views/common/synchro-view.html 
+js/data/attacheddocmodel.js
+js/data/baseview.js 
+js/data/infoconstants.js 
+js/data/userinfo.js 
+js/data/basemodel.js 
+js/data/logininfo.js 
+js/data/infoelement.js 
+js/data/uimanager.js 
+js/data/pouchdatabase.js 
+js/data/itemfactory.js 
+js/data/dataservice.js 
+js/data/departement.js 
+js/data/annee.js 
+js/data/semestre.js 
+js/data/groupe.js 
+js/data/unite.js 
+js/data/matiere.js 
+js/data/person.js 
+js/data/etudiant.js 
+js/data/enseignant.js 
+js/data/administrator.js 
+js/data/etudiantaffectation.js 
+js/data/enseignantaffectation.js 
+js/data/groupeevent.js 
+js/data/etudiantevent.js 
+js/data/siglenameditem.js 
+js/data/intervalledsigleitem.js 
+js/data/departementsiglenameditem.js 
+js/data/baseitem.js 
+js/data/mycrypto.js 
+js/data/departementperson.js 
+js/data/affectation.js 
+js/data/infoevent.js 
+js/data/elementdesc.js 
+js/data/attacheddoc.js 
+js/data/personitem.js 
+js/data/homemodel.js 
+js/data/profilmodel.js 
+js/data/filedesc.js 
+js/data/synchromodel.js 
+js/data/syncmanager.js 
+js/data/localstore.js 
+js/data/departementsmodel.js 
+js/data/siglenamedmodel.js 
+js/data/baseeditmodel.js 
+js/data/baseconsultmodel.js 
+js/views/admin/departements.html 
+js/views/admin/administrators.js 
+js/data/administratorsmodel.js
+js/data/personmodel.js 
+js/data/cvsimporter.js 
+js/data/groupesmodel.js 
+js/data/depsiglenamemodel.js 
+js/data/unitesmodel.js 
+js/data/matieresmodel.js 
+js/data/enseignantsmodel.js 
+js/data/etudiantsmodel.js 
+js/data/intervalmodel.js 
+js/data/anneesmodel.js 
+js/data/enseignantaffectationsmodel.js 
+js/data/affectationsmodel.js 
+js/data/importaffectationsmodel.js 
+js/data/etudaffectationsmodel.js 
+js/data/groupeeventsmodel.js 
+js/data/notelistmodel.js 
+js/data/displayetudiant.js 
+js/data/etudiantsummarymodel.js 
+js/data/baseitemdetail.js 
+js/data/etudiantnotessummary.js 
+js/data/etudianteventssummary.js 
+js/data/summaryitem.js 
+js/data/baseetudiantsummary.js 
+js/data/groupeeventslistmodel.js 
+js/data/groupeeventdetailmodel.js 
+js/data/eventdetailmodel.js 
+js/data/etudianteventdetailmodel.js 
+js/data/etudeventreportmodel.js 
+js/data/semestrereportmodel.js 
+js/data/etudiantsearchmodel.js 
+js/data/semestresmodel.js 
+js/views/admin/admin-router.js 
+js/views/admin/admin-router.html 
+js/views/consult/consult-router.js 
+js/views/consult/consult-router.html 
+js/views/admin/departements.js 
+js/views/admin/administrators.html 
+js/views/admin/groupes.js 
+js/views/admin/groupes.ts 
+js/views/admin/groupes.html 
+js/views/admin/unites.js 
+js/views/admin/unites.html
+js/views/admin/matieres.js 
+js/views/admin/matieres.html 
+js/views/admin/enseignants.js 
+js/views/admin/enseignants.html 
+js/views/admin/etudiants.js 
+js/views/admin/etudiants.html 
+js/views/admin/annees.js 
+js/views/admin/annees.html 
+js/views/admin/semestres.js 
+js/views/admin/semestres.html 
+js/views/admin/import-etuds.js 
+js/views/admin/import-etuds.html 
+js/views/admin/enseignantaffectations.js 
+js/views/admin/enseignantaffectations.html 
+js/views/admin/etudaffectations.js
+js/views/admin/etudaffectations.html 
+js/views/consult/groupeevents.js 
+js/views/consult/groupeevents.html 
+js/views/consult/notes-list.js 
+js/views/consult/notes-list.html 
+js/views/consult/etudiant-summary.js 
+js/views/consult/etudiant-summary.html 
+js/views/consult/groupeevents-list.js
+js/views/consult/groupeevents-list.html 
+js/views/consult/groupeevent-detail.js 
+js/views/consult/groupeevent-detail.html 
+js/views/consult/etudevent-detail.js 
+js/views/consult/etudevent-detail.html 
+js/views/consult/semestre-events.js 
+js/views/consult/semestre-events.html
+js/views/consult/etuds-search.js 
+js/views/consult/etuds-search.html 
+js/views/consult/attacheddocs.js
+js/views/consult/attacheddocs.html
+ NETWORK:
+ *

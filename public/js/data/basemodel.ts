@@ -2,6 +2,7 @@
 import {InfoElement} from './infoelement';
 import {LoginInfo} from './logininfo';
 import {UserInfo} from './userinfo';
+import {UIManager} from './uimanager';
 import {IDataService, IUIManager, IItemFactory, ISemestre, IBaseItem,
 IDepartement, IGroupe, IUnite, IAnnee, IMatiere, IPerson, IInfoRouter} from 'infodata';
 import {GENRE_TP} from './infoconstants';
@@ -10,63 +11,44 @@ declare var window;
 //
 export class BaseModel extends InfoElement {
 
-	private _userinfo: UserInfo;
-	private _bInDep: boolean;
-	private _bInAnnee: boolean;
-	private _bInUnite: boolean;
-	private _bInMatiere: boolean;
-	private _bInGroupe: boolean;
-	private _bInSemestre: boolean;
-	private _baseUrl: string;
-	private _title: string;
-    private _errorMessage: string;
-    private _infoMessage: string;
+	public userInfo: UserInfo = null;
+	private _bInDep: boolean = false;
+	private _bInAnnee: boolean = false;
+	private _bInUnite: boolean = false;
+	private _bInMatiere: boolean = false;
+	private _bInGroupe: boolean = false;
+	private _bInSemestre: boolean = false;
+	private _baseUrl: string = null;
+	public title: string = null;
+    public error_message: string = null;
+    public info_message: string = null;
 	//
 	constructor(user: UserInfo) {
 		super();
-		this._userinfo = user;
+		this.userInfo = (user !== undefined) ? user : null;
+		if (this.userInfo === null) {
+			this.userInfo = new UserInfo(new UIManager());
+		}
 	}// constructor
-	//
-	public get userInfo(): UserInfo {
-		return (this._userinfo !== undefined) ? this._userinfo : null;
-	}
 	//
 	public get_departement_groupetps(): Promise<IGroupe[]> {
 		return (this.userInfo !== null) ? this.userInfo.get_departement_groupetps() : Promise.resolve([]);
 	}//get_departement_groupetps
 	//
 	public get anneeMinDate(): string {
-		return (this.userInfo !== null) ? this.userInfo.anneeMinDate : null;
+		return this.userInfo.anneeMinDate;
 	}
 	public get anneeMaxDate(): string {
-		return (this.userInfo !== null) ? this.userInfo.anneeMaxDate : null;
+		return this.userInfo.anneeMaxDate;
 	}
 	public get semestreMinDate(): string {
-		return (this.userInfo !== null) ? this.userInfo.semestreMinDate : null;
+		return this.userInfo.semestreMinDate;
 	}
 	public get semestreMaxDate(): string {
-		return (this.userInfo !== null) ? this.userInfo.semestreMaxDate : null;
-	}
-	public get title(): string {
-		return (this._title !== undefined) ? this._title : null;
-	}
-	public set title(s: string) {
-		this._title = this.check_string(s);
-	}
-	public get error_message(): string {
-		return (this._errorMessage !== undefined) ? this._errorMessage : null;
-	}
-	public set error_message(s: string) {
-		this._errorMessage = this.check_string(s);
+		return this.userInfo.semestreMaxDate;
 	}
 	public get has_error_message(): boolean {
 		return (this.error_message !== null) && (this.error_message.length > 0);
-	}
-	public get info_message(): string {
-		return (this._infoMessage !== undefined) ? this._infoMessage : null;
-	}
-	public set info_message(s: string) {
-		this._infoMessage = this.check_string(s);
 	}
 	public get has_info_message(): boolean {
 		return (this.info_message !== null) && (this.info_message.length > 0);
@@ -79,115 +61,93 @@ export class BaseModel extends InfoElement {
 		this.error_message = this.convert_error(err);
 	}
 	public get baseUrl(): string {
-		if ((this._baseUrl === undefined) || (this._baseUrl === null)) {
-			let origin = window.location.origin;
-			let pathname = window.location.pathname;
-			this._baseUrl = origin + pathname.toLowerCase().replace("index.html", "");
-			if (!this._baseUrl.endsWith("/")) {
-				this._baseUrl = this._baseUrl + "/";
-			}
-		}
-		return this._baseUrl;
+		return this.userInfo.baseUrl;
 	}
 	public get images_dir(): string {
         return this.baseUrl + "images/";
 	}
 	//
 	public get is_in_departement_change(): boolean {
-		return ((this._bInDep !== undefined) && (this._bInDep !== null)) ? this._bInDep : false;
+		return this._bInDep;
 	}
 	public get is_in_annee_change(): boolean {
 		if (this.is_in_departement_change) {
 			return true;
 		}
-		return ((this._bInAnnee !== undefined) && (this._bInAnnee !== null)) ? this._bInAnnee : false;
+		return this._bInAnnee;
 	}
 	public get is_in_unite_change(): boolean {
 		if (this.is_in_departement_change) {
 			return true;
 		}
-		return ((this._bInUnite !== undefined) && (this._bInUnite !== null)) ? this._bInUnite : false;
+		return this._bInUnite;
 	}
 	public get is_in_semestre_change(): boolean {
 		if (this.is_in_annee_change) {
 			return true;
 		}
-		return ((this._bInSemestre !== undefined) && (this._bInSemestre !== null)) ? this._bInSemestre : false;
+		return this._bInSemestre;
 	}
 	public get is_in_matiere_change(): boolean {
 		if (this.is_in_unite_change) {
 			return true;
 		}
-		return ((this._bInMatiere !== undefined) && (this._bInMatiere !== null)) ? this._bInMatiere : false;
+		return this._bInMatiere;
 	}
 	public get is_in_groupe_change(): boolean {
 		if (this.is_in_departement_change) {
 			return true;
 		}
-		return ((this._bInGroupe !== undefined) && (this._bInGroupe !== null)) ? this._bInGroupe : false;
+		return this._bInGroupe;
+	}
+	protected get_is_in_params_change(): boolean {
+		return (this.is_in_groupe_change || this.is_in_matiere_change ||
+			this.is_in_semestre_change || this.is_in_unite_change || this.is_in_unite_change ||
+			this.is_in_departement_change);
+	}
+	public get is_in_params_change(): boolean {
+		return this.get_is_in_params_change();
 	}
 	//
 	protected post_update_departement(): Promise<boolean> {
-		this._bInDep = false;
 		return Promise.resolve(true);
 	}
 	protected post_update_annee(): Promise<boolean> {
-		this._bInAnnee = false;
 		return Promise.resolve(true);
 	}
 	protected post_update_unite(): Promise<boolean> {
-		this._bInUnite = false;
 		return Promise.resolve(true);
 	}
 	protected post_update_groupe(): Promise<boolean> {
-		this._bInGroupe = false;
 		return Promise.resolve(true);
 	}
 	protected post_update_semestre(): Promise<boolean> {
-		this._bInSemestre = false;
 		return Promise.resolve(true);
 	}
 	protected post_update_matiere(): Promise<boolean> {
-		this._bInMatiere = false;
 		return Promise.resolve(true);
 	}
 	public navigate_to(route: string, args?: any): any {
-		if (this.userInfo !== null) {
-			this.userInfo.navigate_to(route, args);
-		}
+		this.userInfo.navigate_to(route, args);
 	}
 	protected createUrl(blob: Blob): string {
-        if (this.uiManager !== null) {
-            return this.uiManager.createUrl(blob);
-        } else {
-            return null;
-        }
+		return this.uiManager.createUrl(blob);
     }
 	protected revokeUrl(s: string) {
-		if ((s !== undefined) && (s !== null) && (this.uiManager !== null)) {
-			this.uiManager.revokeUrl(s);
-		}
+		this.uiManager.revokeUrl(s);
 	}
 	protected confirm(s: string): Promise<boolean> {
-        if (this.uiManager !== null) {
-            return this.uiManager.confirm(s);
-        } else {
-            return Promise.resolve(false);
-        }
+		return this.uiManager.confirm(s);
     }
 	protected info(s: string): Promise<any> {
-        if (this.uiManager !== null) {
-            return this.uiManager.info(s);
-        } else {
-            return Promise.resolve(false);
-        }
+		return this.uiManager.info(s);
     }
 	//
 	public get loginInfo(): LoginInfo {
-		return (this.userInfo !== null) ? this.userInfo.loginInfo : null;
+		return this.userInfo.loginInfo;
 	}
 	public get uiManager(): IUIManager {
-		return (this.userInfo !== null) ? this.userInfo.uiManager : null;
+		return this.userInfo.uiManager;
 	}
 	public get dataService(): IDataService {
 		return this.loginInfo.dataService;
@@ -196,34 +156,31 @@ export class BaseModel extends InfoElement {
 		return this.loginInfo.itemfactory;
 	}
 	protected get_groupes(): IGroupe[] {
-		return (this.userInfo !== null) ? this.userInfo.groupes : [];
+		return this.userInfo.groupes;
 	}
 	public get groupes(): IGroupe[] {
 		return this.get_groupes();
 	}
 	public get matieres(): IMatiere[] {
-		return (this.userInfo !== null) ? this.userInfo.matieres : [];
+		return this.userInfo.matieres;
 	}
 	public get unites(): IUnite[] {
-		return (this.userInfo !== null) ? this.userInfo.unites : [];
+		return this.userInfo.unites;
 	}
 	public get semestres(): ISemestre[] {
-		return (this.userInfo !== null) ? this.userInfo.semestres : [];
+		return this.userInfo.semestres;
 	}
 	public get annees(): IAnnee[] {
-		return (this.userInfo !== null) ? this.userInfo.annees : [];
+		return this.userInfo.annees;
 	}
     //
     public get departements(): IDepartement[] {
-        return (this.userInfo !== null) ? this.userInfo.departements : [];
+        return this.userInfo.departements;
     }
 	public get departement(): IDepartement {
-		return (this.userInfo !== null) ? this.userInfo.departement : null;
+		return this.userInfo.departement;
     }
     public set departement(s: IDepartement) {
-		if (this.userInfo === null) {
-			return;
-		}
 		if (this.userInfo.is_in_departement_change) {
 			return;
 		}
@@ -238,181 +195,167 @@ export class BaseModel extends InfoElement {
 	}
     //
     public get semestre(): ISemestre {
-		return (this.userInfo !== null) ? this.userInfo.semestre : null;
+		return this.userInfo.semestre;
     }
     public set semestre(s: ISemestre) {
-		if (this.userInfo !== null) {
-			if (this.is_in_semestre_change) {
-				return;
-			}
-			this._bInSemestre = true;
-			this.userInfo.semestre = s;
-			this.post_update_semestre().then((x) => {
-				this._bInSemestre = false;
-			}).catch((e) => {
-				this._bInSemestre = false;
-			});
+		if (this.is_in_semestre_change) {
+			return;
 		}
+		this._bInSemestre = true;
+		this.userInfo.semestre = s;
+		this.post_update_semestre().then((x) => {
+			this._bInSemestre = false;
+		}).catch((e) => {
+			this._bInSemestre = false;
+		});
     }
     public get groupe(): IGroupe {
-		return (this.userInfo !== null) ? this.userInfo.groupe : null;
+		return this.userInfo.groupe;
     }
     public set groupe(s: IGroupe) {
-		if (this.userInfo !== null) {
-			if (this.is_in_groupe_change) {
-				return;
-			}
-			this._bInGroupe = true;
-			this.userInfo.groupe = s;
-			this.post_update_groupe().then((x) => {
-				this._bInGroupe = false;
-			}).catch((e) => {
-				this._bInGroupe = false;
-			});
+		if (this.is_in_groupe_change) {
+			return;
 		}
+		this._bInGroupe = true;
+		this.userInfo.groupe = s;
+		this.post_update_groupe().then((x) => {
+			this._bInGroupe = false;
+		}).catch((e) => {
+			this._bInGroupe = false;
+		});
     }
     //
     public get matiere(): IMatiere {
-		return (this.userInfo !== null) ? this.userInfo.matiere : null;
+		return this.userInfo.matiere;
     }
     public set matiere(s: IMatiere) {
-		if (this.userInfo !== null) {
-			if (this.is_in_matiere_change) {
-				return;
-			}
-			this.userInfo.matiere = s;
-			this._bInMatiere = true;
-			this.post_update_matiere().then((x) => {
-				this._bInMatiere = false;
-			}).catch((e) => {
-				this._bInMatiere = false;
-			});
+		if (this.is_in_matiere_change) {
+			return;
 		}
+		this.userInfo.matiere = s;
+		this._bInMatiere = true;
+		this.post_update_matiere().then((x) => {
+			this._bInMatiere = false;
+		}).catch((e) => {
+			this._bInMatiere = false;
+		});
 	}
     public get annee(): IAnnee {
-        return (this.userInfo !== null) ? this.userInfo.annee : null;
+        return this.userInfo.annee;
     }
     public set annee(s: IAnnee) {
-		if (this.userInfo !== null) {
-			if (this.userInfo.is_in_annee_change) {
-				return;
-			}
-			if (this.is_in_annee_change) {
-				return;
-			}
-			this._bInAnnee = true;
-			this.userInfo.annee = s;
-			this.post_update_annee().then((x) => {
-				this._bInAnnee = false;
-			}).catch((e) => {
-				this._bInAnnee = false;
-			});
+		if (this.userInfo.is_in_annee_change) {
+			return;
 		}
+		if (this.is_in_annee_change) {
+			return;
+		}
+		this._bInAnnee = true;
+		this.userInfo.annee = s;
+		this.post_update_annee().then((x) => {
+			this._bInAnnee = false;
+		}).catch((e) => {
+			this._bInAnnee = false;
+		});
     }
     public get unite(): IUnite {
-		return (this.userInfo !== null) ? this.userInfo.unite : null;
+		return this.userInfo.unite;
     }
     public set unite(s: IUnite) {
-		if (this.userInfo !== null) {
-			if (this.userInfo.is_in_unite_change) {
-				return;
-			}
-			if (this.is_in_unite_change) {
-				return;
-			}
-			this._bInUnite = true;
-			this.userInfo.unite = s;
-			this.post_update_unite().then((xx) => {
-				this._bInUnite = false;
-			}).catch((e) => {
-				this._bInUnite = false;
-			});
+		if (this.userInfo.is_in_unite_change) {
+			return;
 		}
+		if (this.is_in_unite_change) {
+			return;
+		}
+		this._bInUnite = true;
+		this.userInfo.unite = s;
+		this.post_update_unite().then((xx) => {
+			this._bInUnite = false;
+		}).catch((e) => {
+			this._bInUnite = false;
+		});
     }
 	//
 	public get departementid(): string {
-		return (this.userInfo !== null) ? this.userInfo.departementid : null;
+		return this.userInfo.departementid;
 	}
 	public get anneeid(): string {
-		return (this.userInfo !== null) ? this.userInfo.anneeid : null;
+		return this.userInfo.anneeid;
 	}
 	public get semestreid(): string {
-		return (this.userInfo !== null) ? this.userInfo.semestreid : null;
+		return this.userInfo.semestreid;
 	}
 	public get groupeid(): string {
-		return (this.userInfo !== null) ? this.userInfo.groupeid : null;
+		return this.userInfo.groupeid;
 	}
 	public get uniteid(): string {
-		return (this.userInfo !== null) ? this.userInfo.uniteid : null;
+		return this.userInfo.uniteid;
 	}
 	public get matiereid(): string {
-		return (this.userInfo !== null) ? this.userInfo.matiereid : null;
+		return this.userInfo.matiereid;
 	}
 	//
 	public get departementName(): string {
-		return (this.userInfo !== null) ? this.userInfo.departementName : null;
+		return this.userInfo.departementName;
 	}
 	public get anneeName(): string {
-		return (this.userInfo !== null) ? this.userInfo.anneeName : null;
+		return this.userInfo.anneeName;
 	}
 	public get semestreName(): string {
-		return (this.userInfo !== null) ? this.userInfo.semestreName : null;
+		return this.userInfo.semestreName;
 	}
 	public get groupeName(): string {
-		return (this.userInfo !== null) ? this.userInfo.groupeName : null;
+		return this.userInfo.groupeName;
 	}
 	public get uniteName(): string {
-		return (this.userInfo !== null) ? this.userInfo.uniteName : null;
+		return this.userInfo.uniteName;
 	}
 	public get matiereName(): string {
-		return (this.userInfo !== null) ? this.userInfo.matiereName : null;
+		return this.userInfo.matiereName;
 	}
     //
     public get person(): IPerson {
-        return (this.userInfo !== null) ? this.userInfo.person : null;
+        return this.userInfo.person;
     }// get person
 	
     public login(username: string, spass: string): Promise<boolean> {
-		if (this.userInfo !== null) {
-			return this.userInfo.login(username, spass);
-		} else {
-			return Promise.resolve(false);
-		}
+		return this.userInfo.login(username, spass);
     }// login
     public logout(): void {
-		if (this.userInfo !== null) {
-			this.userInfo.logout();
-		}
+		this.error_message = null;
+		this.info_message = null;
+		this.userInfo.logout();
     }// logout
     public get is_super(): boolean {
-		return (this.userInfo !== null) ? this.userInfo.is_super : false;
+		return this.userInfo.is_super;
     }
     public get is_admin(): boolean {
-		return (this.userInfo !== null) ? this.userInfo.is_admin : false;
+		return this.userInfo.is_admin;
     }
     public get is_prof(): boolean {
-        return (this.userInfo !== null) ? this.userInfo.is_prof : false;
+        return this.userInfo.is_prof;
     }
     public get is_etud(): boolean {
-        return (this.userInfo !== null) ? this.userInfo.is_etud : false;
+        return this.userInfo.is_etud;
     }
     public get url(): string {
-        return (this.userInfo !== null) ? this.userInfo.url : null;
+        return this.userInfo.url;
     }
     public get has_url(): boolean {
-        return (this.userInfo !== null) ? this.userInfo.has_url : false;
+        return this.userInfo.has_url;
     }
     public get personid(): string {
-        return (this.userInfo !== null) ? this.userInfo.personid : null;
+        return this.userInfo.personid;
     }
     public get fullname(): string {
-        return (this.userInfo !== null) ? this.userInfo.fullname : null;
+        return this.userInfo.fullname;
     }
     public get is_connected(): boolean {
-        return (this.userInfo !== null) ? this.userInfo.is_connected : false;
+        return this.userInfo.is_connected;
     }
     public get is_notconnected(): boolean {
-        return (this.userInfo !== null) ? this.userInfo.is_notconnected : false;
+        return this.userInfo.is_notconnected;
     }
     //
 	protected retrieve_one_avatar(item: IBaseItem): Promise<IBaseItem> {

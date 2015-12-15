@@ -10,53 +10,48 @@ import {GENRE_TP} from './infoconstants';
 //
 export class UserInfo extends InfoElement {
 	//
-	private _router: IInfoRouter;
-	private _loginInfo: LoginInfo;
-	private _uimanager: IUIManager;
+	public baseUrl: string = null;
+	public router: IInfoRouter = null;
+	public loginInfo: LoginInfo = new LoginInfo();
+	public uiManager: IUIManager = null;
 	//
-    private _annees: IAnnee[];
-    private _semestres: ISemestre[];
-    private _unites: IUnite[];
-    private _matieres: IMatiere[];
-    private _groupes: IGroupe[];
+    public annees: IAnnee[] = [];
+    public semestres: ISemestre[] = [];
+    public unites: IUnite[] = [];
+    public matieres: IMatiere[] = [];
+    public groupes: IGroupe[] = [];
     //
-    private _annee: IAnnee;
-    private _unite: IUnite;
-    private _semestre: ISemestre;
-    private _matiere: IMatiere;
-    private _groupe: IGroupe;
+    private _annee: IAnnee = null;
+    private _unite: IUnite = null;
+    private _semestre: ISemestre = null;
+    public matiere: IMatiere = null;
+    public groupe: IGroupe = null;
 	//
-	private _bInDep: boolean;
-	private _bInAnnee: boolean;
-	private _bInUnite: boolean;
+	private _bInDep: boolean = false;
+	private _bInAnnee: boolean = false;
+	private _bInUnite: boolean = false;
 	//
-	private _anneeMinDate: string;
-	private _anneeMaxDate: string;
-	private _semestreMinDate: string;
-	private _semestreMaxDate: string;
+	private _anneeMinDate: string = null;
+	private _anneeMaxDate: string = null;
+	private _semestreMinDate: string = null;
+	private _semestreMaxDate: string = null;
 	//
-	private _gtps: IGroupe[];
+	private _gtps: IGroupe[] = [];
     //
 	constructor(man?: IUIManager) {
 		super();
 		if ((man !== undefined) && (man !== null)) {
-			this._uimanager = man;
+			this.uiManager = man;
+		}
+		let origin = window.location.origin;
+		let pathname = window.location.pathname;
+		this.baseUrl = origin + pathname.toLowerCase().replace("index.html", "");
+		if (!this.baseUrl.endsWith("/")) {
+			this.baseUrl = this.baseUrl + "/";
 		}
 	}// constructor
 	public get_departement_groupetps(): Promise<IGroupe[]> {
-		if ((this._gtps !== undefined) && (this._gtps !== null) && (this._gtps.length > 0)) {
-			return Promise.resolve(this._gtps);
-		}
-		let model = this.itemFactory.create_groupe();
-		return this.dataService.query_items(model.type(), {
-			departementid: this.departementid,
-			genre: GENRE_TP
-		}).then((gg: IGroupe[]) => {
-			this._gtps = (gg !== undefined) ? gg : [];
-			return this._gtps;
-		}).catch((e) => {
-			return [];
-		})
+		return Promise.resolve(this._gtps);
 	}//get_departement_groupetps
 	public get anneeMinDate(): string {
 		return (this._anneeMinDate !== undefined) ? this._anneeMinDate : null;
@@ -71,43 +66,26 @@ export class UserInfo extends InfoElement {
 		return (this._semestreMaxDate !== undefined) ? this._semestreMaxDate : null;
 	}
 	public get is_in_departement_change(): boolean {
-		return ((this._bInDep !== undefined) && (this._bInDep !== null)) ? this._bInDep : false;
+		return this._bInDep;
 	}
 	public get is_in_annee_change(): boolean {
 		if (this.is_in_departement_change) {
 			return true;
 		}
-		return ((this._bInAnnee !== undefined) && (this._bInAnnee !== null)) ? this._bInAnnee : false;
+		return this._bInAnnee;
 	}
 	public get is_in_unite_change(): boolean {
 		if (this.is_in_departement_change) {
 			return true;
 		}
-		return ((this._bInUnite !== undefined) && (this._bInUnite !== null)) ? this._bInUnite : false;
+		return this._bInUnite;
 	}
 	//
-	public get router(): IInfoRouter {
-		return (this._router !== undefined) ? this._router : null;
-	}
-	public set router(s: IInfoRouter) {
-		this._router = s;
-	}
+	
 	public navigate_to(route: string, args?: any): any {
 		if ((this.router !== null) && (route !== undefined) && (route !== null)) {
 			this.router.navigate_to(route, args);
 		}
-	}
-	public get loginInfo(): LoginInfo {
-		if ((this._loginInfo === undefined) || (this._loginInfo === null)) {
-			this._loginInfo = new LoginInfo();
-		}
-		return this._loginInfo;
-	}
-	public get uiManager(): IUIManager {
-		if ((this._uimanager === undefined) || (this._uimanager === null)) {
-			this._uimanager = new UIManager();
-		}
-		return this._uimanager;
 	}
 	public get dataService(): IDataService {
 		return this.loginInfo.dataService;
@@ -115,48 +93,28 @@ export class UserInfo extends InfoElement {
 	public get itemFactory(): IItemFactory {
 		return this.loginInfo.itemfactory;
 	}
-	public get groupes(): IGroupe[] {
-		return ((this._groupes !== undefined) && (this._groupes !== null)) ? this._groupes : [];
-	}
-	public set groupes(s: IGroupe[]) {
-		this._groupes = s;
-	}
-	public get matieres(): IMatiere[] {
-		return ((this._matieres !== undefined) && (this._matieres !== null)) ? this._matieres : [];
-	}
-	public set matieres(s: IMatiere[]) {
-		this._matieres = s;
-	}
-	public get unites(): IUnite[] {
-		return ((this._unites !== undefined) && (this._unites !== null)) ? this._unites : [];
-	}
-	public set unites(s: IUnite[]) {
-		this._unites = s;
-	}
-	public get semestres(): ISemestre[] {
-		return ((this._semestres !== undefined) && (this._semestres !== null)) ? this._semestres : [];
-	}
-	public set semestres(s: ISemestre[]) {
-		this._semestres = s;
-	}
-	public get annees(): IAnnee[] {
-		return ((this._annees !== undefined) && (this._annees !== null)) ? this._annees : [];
-	}
-	public set annees(s: IAnnee[]) {
-		this._annees = s;
-	}
     //
     public get departements(): IDepartement[] {
-        return (this.loginInfo.all_departements !== null) ? this.loginInfo.all_departements : [];
+        return this.loginInfo.all_departements;
     }
 	public get departement(): IDepartement {
 		return this.loginInfo.departement;
     }
-    public set departement(s: IDepartement) {
-		this._gtps = null;
-        let cur = (s !== undefined) ? s : null;
+	public change_departement(s: IDepartement): Promise<boolean> {
+		let cur = (s !== undefined) ? s : null;
 		this.loginInfo.departement = cur;
-		this.post_update_departement();
+		return this.get_tps().then((gg) => {
+			this._gtps = gg;
+			return this.post_update_departement();
+		});
+	}// change_departement
+    public set departement(s: IDepartement) {
+		if (!this._bInDep) {
+			this._bInDep = true;
+			this.change_departement(s).then((b) => {
+				this._bInDep = false;
+			});
+		}
 	}
     //
     public get semestre(): ISemestre {
@@ -175,42 +133,39 @@ export class UserInfo extends InfoElement {
 			}
 		}
     }
-    public get groupe(): IGroupe {
-        return (this._groupe !== undefined) ? this._groupe : null;
-    }
-    public set groupe(s: IGroupe) {
-		this._groupe = (s !== undefined) ? s : null;
-    }
-    //
-    public get matiere(): IMatiere {
-        return (this._matiere !== undefined) ? this._matiere : null;
-    }
-    public set matiere(s: IMatiere) {
-		this._matiere = (s !== undefined) ? s : null;
-    }
     public get annee(): IAnnee {
-        return (this._annee !== undefined) ? this._annee : null;
+        return this._annee;
     }
     public set annee(s: IAnnee) {
-		this._annee = (s !== undefined) ? s : null;
-		if ((this._annee !== undefined) && (this._annee !== null)) {
-			let a: Date = this._annee.startDate;
-			if ((a !== undefined) && (a !== null)) {
-				this._anneeMinDate = a.toISOString().substr(0, 10);
+		if (!this._bInAnnee) {
+			this._bInAnnee = true;
+			this._annee = (s !== undefined) ? s : null;
+			if ((this._annee !== undefined) && (this._annee !== null)) {
+				let a: Date = this._annee.startDate;
+				if ((a !== undefined) && (a !== null)) {
+					this._anneeMinDate = a.toISOString().substr(0, 10);
+				}
+				a = this.annee.endDate;
+				if ((a !== undefined) && (a !== null)) {
+					this._anneeMaxDate = a.toISOString().substr(0, 10);
+				}
 			}
-			a = this.annee.endDate;
-			if ((a !== undefined) && (a !== null)) {
-				this._anneeMaxDate = a.toISOString().substr(0, 10);
-			}
-		}
-		this.post_update_annee();
+			this.post_update_annee().then((b) => {
+				this._bInAnnee = false;
+			});
+		}// not busy
     }
     public get unite(): IUnite {
         return (this._unite !== undefined) ? this._unite : null;
     }
     public set unite(s: IUnite) {
-		this._unite = (s !== undefined) ? s : null;
-		this.post_update_unite();
+		if (!this._bInUnite) {
+			this._bInUnite = true;
+			this._unite = (s !== undefined) ? s : null;
+			this.post_update_unite().then((b) => {
+				this._bInUnite = false;
+			})
+		}
     }
     //
     public get person(): IPerson {
@@ -262,16 +217,16 @@ export class UserInfo extends InfoElement {
 			this.person.url = null;
         }
         this.loginInfo.disconnect();
-        this._annees = [];
-        this._semestres = [];
-        this._unites = [];
-        this._matieres = [];
-        this._groupes = [];
+        this.annees = [];
+        this.semestres = [];
+        this.unites = [];
+        this.matieres = [];
+        this.groupes = [];
 		this._annee = null;
 		this._semestre = null;
 		this._unite = null;
-		this._matiere = null;
-		this._groupe = null;
+		this.matiere = null;
+		this.groupe = null;
     }// clear_data
     public login(username: string, spass: string): Promise<boolean> {
         this.clear_data();
@@ -326,33 +281,29 @@ export class UserInfo extends InfoElement {
         return (!this.is_connected);
     }
     //
-    private post_update_departement(): Promise<any> {
-		this._bInDep = true;
-        //
+    private post_update_departement(): Promise<boolean> {
         let xannees: IAnnee[] = [];
         let xunites: IUnite[] = [];
         let xgroupes: IGroupe[] = [];
         //
 		let dep = this.departement;
         if (dep === null) {
-            this._annees = xannees;
-            this._unites = xunites;
-            this._groupes = xgroupes;
+            this.annees = xannees;
+            this.unites = xunites;
+            this.groupes = xgroupes;
 			this._annee = null;
 			this._unite = null;
-			this._groupe = null;
-			this._bInDep = false;
+			this.groupe = null;
             return Promise.resolve(true);
         }
         let pPers: IPerson = this.person;
         if (pPers === null) {
-            this._annees = xannees;
-            this._unites = xunites;
-            this._groupes = xgroupes;
+            this.annees = xannees;
+            this.unites = xunites;
+            this.groupes = xgroupes;
 			this._annee = null;
 			this._unite = null;
-			this._groupe = null;
-			this._bInDep = false;
+			this.groupe = null;
             return Promise.resolve(true);
         }
 		let depid: string = dep.id;
@@ -373,29 +324,28 @@ export class UserInfo extends InfoElement {
 				return this.dataService.query_items(stype, sel);
 			}).then((uu: IUnite[]) => {
 				xunites = ((uu !== undefined) && (uu !== null)) ? uu : [];
-				this._annees = xannees;
-				this._unites = xunites;
-				this._groupes = xgroupes;
-				if (this._annees.length > 0) {
-					this._annee = this._annees[0];
+				this.annees = xannees;
+				this.unites = xunites;
+				this.groupes = xgroupes;
+				if (this.annees.length > 0) {
+					this._annee = this.annees[0];
 				} else {
 					this._annee = null;
 				}
-				if (this._unites.length > 0) {
-					this._unite = this._unites[0];
+				if (this.unites.length > 0) {
+					this._unite = this.unites[0];
 				} else {
 					this._unite = null;
 				}
-				if (this._groupes.length > 0) {
-					this._groupe = this._groupes[0];
+				if (this.groupes.length > 0) {
+					this.groupe = this.groupes[0];
 				} else {
-					this._groupe = null;
+					this.groupe = null;
 				}
 				return this.post_update_annee();
 			}).then((vx) => {
 				return this.post_update_unite();
 			}).then((df) => {
-				this._bInDep = false;
 				return true;
 			});
 		} else {
@@ -420,48 +370,44 @@ export class UserInfo extends InfoElement {
 					}
 				}//x
 			}
-			this._unites = xunites;
-			this._annees = xannees;
-			this._groupes = xgroupes;
-			if (this._annees.length > 0) {
-				this._annee = this._annees[0];
+			this.unites = xunites;
+			this.annees = xannees;
+			this.groupes = xgroupes;
+			if (this.annees.length > 0) {
+				this._annee = this.annees[0];
 			} else {
 				this._annee = null;
 			}
-			if (this._unites.length > 0) {
-				this._unite = this._unites[0];
+			if (this.unites.length > 0) {
+				this._unite = this.unites[0];
 			} else {
 				this.unite = null;
 			}
-			if (this._groupes.length > 0) {
-				this._groupe = this._groupes[0];
+			if (this.groupes.length > 0) {
+				this.groupe = this.groupes[0];
 			} else {
 				this.groupe = null;
 			}
 			return this.post_update_annee().then((a) => {
 				return this.post_update_unite();
 			}).then((b) => {
-				this._bInDep = false;
 				return true;
 			});
 		}
     }// post_update_departement
-    private post_update_annee(): Promise<any> {
-		this._bInAnnee = true;
+    private post_update_annee(): Promise<boolean> {
 		let xsemestres: ISemestre[] = [];
 		let an = this._annee;
 		if ((an === undefined) || (an === null)) {
-			this._semestres = xsemestres;
+			this.semestres = xsemestres;
 			this._semestre = null;
-			this._bInAnnee = false;
 			return Promise.resolve(true);
 		}
         let anneeid = an.id;
 		let pPers: IPerson = this.person;
 		if (pPers === null) {
-			this._semestres = xsemestres;
+			this.semestres = xsemestres;
 			this._semestre = null;
-			this._bInAnnee = false;
 			return Promise.resolve(true);
 		}
         if (this.is_admin || this.is_super) {
@@ -469,9 +415,9 @@ export class UserInfo extends InfoElement {
 			let model = this.itemFactory.create_semestre();
 			let stype: string = model.type();
 			return this.dataService.query_items(stype, sel).then((dd: ISemestre[]) => {
-				this._semestres = ((dd !== undefined) && (dd !== null)) ? dd : [];
-				if (this._semestres.length > 0) {
-					this._semestre = this._semestres[0];
+				this.semestres = ((dd !== undefined) && (dd !== null)) ? dd : [];
+				if (this.semestres.length > 0) {
+					this._semestre = this.semestres[0];
 				} else {
 					this._semestre = null;
 				}
@@ -484,32 +430,28 @@ export class UserInfo extends InfoElement {
 					xsemestres.push(x);
 				}
 			}//x
-			this._semestres = xsemestres;
-			if (this._semestres.length > 0) {
-				this._semestre = this._semestres[0];
+			this.semestres = xsemestres;
+			if (this.semestres.length > 0) {
+				this._semestre = this.semestres[0];
 			} else {
 				this._semestre = null;
 			}
-			this._bInAnnee = false;
 			return Promise.resolve(true);
 		}
     }// post_change_annee
-    private post_update_unite(): Promise<any> {
-		this._bInUnite = true;
+    private post_update_unite(): Promise<boolean> {
 		let xmatieres: IMatiere[] = [];
 		let un = this.unite;
 		if (un === null) {
-			this._matieres = xmatieres;
-			this._matiere = null;
-			this._bInUnite = false;
+			this.matieres = xmatieres;
+			this.matiere = null;
 			return Promise.resolve(true);
 		}
         let uniteid = un.id;
 		let pPers: IPerson = this.person;
 		if (pPers === null) {
-			this._matieres = xmatieres;
-			this._matiere = null;
-			this._bInUnite = false;
+			this.matieres = xmatieres;
+			this.matiere = null;
 			return Promise.resolve(true);
 		}
         if (this.is_admin || this.is_super) {
@@ -517,13 +459,12 @@ export class UserInfo extends InfoElement {
 			let model = this.itemFactory.create_matiere();
 			let stype: string = model.type();
 			return this.dataService.query_items(stype, sel).then((dd: IMatiere[]) => {
-				this._matieres = ((dd !== undefined) && (dd !== null)) ? dd : [];
-				if (this._matieres.length > 0) {
-					this._matiere = this._matieres[0];
+				this.matieres = ((dd !== undefined) && (dd !== null)) ? dd : [];
+				if (this.matieres.length > 0) {
+					this.matiere = this.matieres[0];
 				} else {
-					this._matiere = null;
+					this.matiere = null;
 				}
-				this._bInUnite = false;
 				return true;
 			});
 		} else if (this.loginInfo.all_matieres !== null) {
@@ -532,14 +473,26 @@ export class UserInfo extends InfoElement {
 					xmatieres.push(x);
 				}
 			}//x
-			this._matieres = xmatieres;
-			if (this._matieres.length > 0) {
-				this._matiere = this._matieres[0];
+			this.matieres = xmatieres;
+			if (this.matieres.length > 0) {
+				this.matiere = this.matieres[0];
 			} else {
-				this._matiere = null;
+				this.matiere = null;
 			}
-			this._bInUnite = false;
 			return Promise.resolve(true);
 		}
     }// post_change_unite
+	private get_tps(): Promise<IGroupe[]> {
+		let oRet: IGroupe[] = [];
+		let model = this.itemFactory.create_groupe();
+		return this.dataService.query_items(model.type(), {
+			departementid: this.departementid,
+			genre: GENRE_TP
+		}).then((gg: IGroupe[]) => {
+			oRet = ((gg !== undefined) && (gg !== null)) ? gg : [];
+			return oRet;
+		}).catch((e) => {
+			return oRet;
+		});
+	}// get_tps 
 }// class UserInfo

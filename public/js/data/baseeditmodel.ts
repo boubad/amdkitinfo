@@ -49,7 +49,7 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		return (this.workingUrl !== null);
 	}
 	public get isEditItem(): boolean {
-		return (this.currentItem.id !== null) && (this.currentItem.rev !== null);
+		return (this.currentItem !== null)  && (this.currentItem.id !== null) && (this.currentItem.rev !== null);
 	}
 	public get isNotEditItem(): boolean {
 		return (!this.isEditItem);
