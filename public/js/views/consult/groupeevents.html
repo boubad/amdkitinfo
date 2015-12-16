@@ -41,7 +41,7 @@
 	</table>
 	<table if.bind="editMode">
 		<tbody>
-			<tr>
+			<tr if.bind="can_show">
 				<td style="vertical-align:top" if.bind="hasItems">
 					<div style="text-align:center">
 						<pagination-bar></pagination-bar>
@@ -51,7 +51,7 @@
 					</select>
 				</td>
 				<td>&nbsp;&nbsp</td>
-				<td style="vertical-align:top" if.bind="canShowForm">
+				<td style="vertical-align:top">
 					<form role="form">
 						<table>
 							<tr>

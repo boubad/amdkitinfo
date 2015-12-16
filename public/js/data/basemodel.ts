@@ -112,7 +112,7 @@ export class BaseModel extends InfoElement {
 		return this.get_is_in_params_change();
 	}
 	public get is_busy():boolean {
-		return (this._xbusy) && this.get_isbusy_change();
+		return this._xbusy || this.get_isbusy_change();
 	}
 	public set is_busy(b:boolean){
 		this._xbusy = ((b !== undefined) && (b !== null)) ? b: false;

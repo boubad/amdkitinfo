@@ -67,6 +67,7 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		if ((id === null) || (avatarid === null)) {
 			return;
 		}
+		this.is_busy = true;
 		let service = this.dataService;
 		return this.confirm('Voulez-vous vraiment supprimer cet avatar?').then((bRet) => {
 			if (bRet) {
@@ -91,8 +92,10 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 				this.fileDesc.clear();
 				this.info_message = 'Avatar supprimé.';
 			}
+			this.is_busy = false;
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 		});
 	}
 	public saveAvatar(): any {
@@ -114,6 +117,7 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		if ((avatarid === null) || (type === null) || (data === null)) {
 			return;
 		}
+		this.is_busy = true;
 		let service = this.dataService;
 		this.clear_error();
 		return service.maintains_attachment(id, avatarid, data, type).then((r) => {
@@ -124,8 +128,10 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 			this.fileDesc.clear_url();
 			this.fileDesc.clear();
 			this.info_message = 'Avatar modifié.';
+			this.is_busy = false;
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 		});
 	}// saveAvatar
 	protected get oldItem(): T {
@@ -200,12 +206,12 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		if ((item.id === null) || (item.rev === null)) {
 			return Promise.resolve(false);
 		}
+		this.is_busy = true;
 		return this.confirm('Voulez-vous vraiment supprimer ' + item.id + '?').then((b) => {
 			this.clear_error();
 			return this.dataService.remove_item(item);
 		}).then((r) => {
-			this.refreshAll();
-			return true;
+			return this.refreshAll();
 		}).catch((err) => {
 			this.set_error(err);
 			return false;

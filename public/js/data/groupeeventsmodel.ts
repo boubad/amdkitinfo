@@ -530,6 +530,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
             x.endTime = s;
         }
     }
+	
     protected is_refresh(): boolean {
         return (this.modelItem !== null) &&
             (this.personid !== null) && (this.groupeid !== null) && (this.matiereid !== null) &&

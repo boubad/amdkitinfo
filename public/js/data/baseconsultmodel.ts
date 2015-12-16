@@ -80,10 +80,14 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 	public get canShowForm(): boolean {
 		return this.is_refresh() && this.is_not_busy;
 	}
+	public get can_show():boolean{
+		return this.is_refresh();
+	}
 	protected is_refresh(): boolean {
 		return (!this.get_isbusy_change());
 	}
 	public refresh(): Promise<any> {
+		this.is_busy = true;
 		this.clear_error();
 		if (this.items.length > 0) {
 			for (let elem of this.items) {
@@ -97,6 +101,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 		this.items = [];
 		let nbItems = this.allIds.length;
 		if (nbItems < 1) {
+			this.is_busy =false;
 			return Promise.resolve(true);
 		}
 		let nc = this.itemsPerPage;
@@ -124,6 +129,10 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			let p = this.sync_array(this.items, oldid);
 			this.currentItem = p;
 			this.pageStatus = this.get_pageStatus();
+			this.is_busy = false;
+			return true;
+		}).catch((e)=>{
+			this.is_busy = false;
 			return true;
 		});
 	}// refresh
@@ -139,8 +148,10 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 		this.pageStatus = null;
 	}
 	public refreshAll(): Promise<any> {
+		this.is_busy = true;
 		this.prepare_refresh();
 		if (!this.is_refresh()) {
+			this.is_busy = false;
 			return Promise.resolve(true);
 		}
 		let nc = this.itemsPerPage;
@@ -156,6 +167,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			return this.refresh();
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 			return false;
 		})
 	}// refreshAll

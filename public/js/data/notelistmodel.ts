@@ -18,7 +18,7 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
     }// constructor
     protected post_update_semestre(): Promise<boolean> {
 		return super.post_update_semestre().then((r) => {
-			if (!this.in_activate) {
+			if (this.is_not_busy) {
 				return this.refreshAll();
 			} else {
 				return true;
@@ -27,7 +27,7 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
     }
     protected post_update_matiere(): Promise<boolean> {
 		return super.post_update_matiere().then((r) => {
-			if (!this.in_activate) {
+			if (this.is_not_busy) {
 				return this.refreshAll();
 			} else {
 				return true;
@@ -78,6 +78,7 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
         if (!this.is_refresh()) {
             return Promise.resolve(true);
         }
+		this.is_busy = true;
         let nc = this.itemsPerPage;
         return this.get_semestre_matiere_notes().then((pp: IEtudiantEvent[]) => {
             return this.transform_data(pp);
@@ -112,6 +113,7 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
         if ((iend < 0) && (iend >= nbItems)) {
             return Promise.resolve(true);
         }
+		this.is_busy = true;
         let oRet: IDisplayEtudiant[] = [];
         let i = istart;
         while (i <= iend) {
@@ -122,7 +124,11 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
         return this.retrieve_avatars(oRet).then((pp: IDisplayEtudiant[]) => {
             self.items = pp;
 			this.pageStatus = this.get_pageStatus();
+			this.is_busy = false;
             return true;
-        })
+        }).catch((s)=>{
+			this.is_busy = false;
+            return false;
+		})
     }// refresh
 }// class BaseEditViewModel
