@@ -100,14 +100,6 @@ export class UserInfo extends InfoElement {
 	public get departement(): IDepartement {
 		return this.loginInfo.departement;
     }
-	public change_departement(s: IDepartement): Promise<boolean> {
-		let cur = (s !== undefined) ? s : null;
-		this.loginInfo.departement = cur;
-		return this.get_tps().then((gg) => {
-			this._gtps = gg;
-			return this.post_update_departement();
-		});
-	}// change_departement
     public set departement(s: IDepartement) {
 		if (!this._bInDep) {
 			this._bInDep = true;
@@ -116,11 +108,22 @@ export class UserInfo extends InfoElement {
 			});
 		}
 	}
+	public change_departement(s: IDepartement): Promise<boolean> {
+		let cur = (s !== undefined) ? s : null;
+		this.loginInfo.departement = cur;
+		return this.get_tps().then((gg) => {
+			this._gtps = gg;
+			return this.post_update_departement();
+		});
+	}// change_departement
     //
     public get semestre(): ISemestre {
         return (this._semestre !== undefined) ? this._semestre : null;
     }
-    public set semestre(s: ISemestre) {
+	public set semestre(s: ISemestre) {
+		this.change_semestre(s);
+    }
+	public change_semestre(s: ISemestre): Promise<boolean> {
 		this._semestre = (s !== undefined) ? s : null;
 		if ((this._semestre !== undefined) && (this._semestre !== null)) {
 			let a: Date = this._semestre.startDate;
@@ -132,41 +135,49 @@ export class UserInfo extends InfoElement {
 				this._semestreMaxDate = a.toISOString().substr(0, 10);
 			}
 		}
-    }
+		return Promise.resolve(true);
+	}//change_semestre
+   
     public get annee(): IAnnee {
         return this._annee;
     }
     public set annee(s: IAnnee) {
 		if (!this._bInAnnee) {
 			this._bInAnnee = true;
-			this._annee = (s !== undefined) ? s : null;
-			if ((this._annee !== undefined) && (this._annee !== null)) {
-				let a: Date = this._annee.startDate;
-				if ((a !== undefined) && (a !== null)) {
-					this._anneeMinDate = a.toISOString().substr(0, 10);
-				}
-				a = this.annee.endDate;
-				if ((a !== undefined) && (a !== null)) {
-					this._anneeMaxDate = a.toISOString().substr(0, 10);
-				}
-			}
-			this.post_update_annee().then((b) => {
+			this.change_annee(s).then((x) => {
 				this._bInAnnee = false;
 			});
-		}// not busy
+		}
     }
+	public change_annee(s: IAnnee): Promise<boolean> {
+		this._annee = (s !== undefined) ? s : null;
+		if ((this._annee !== undefined) && (this._annee !== null)) {
+			let a: Date = this._annee.startDate;
+			if ((a !== undefined) && (a !== null)) {
+				this._anneeMinDate = a.toISOString().substr(0, 10);
+			}
+			a = this.annee.endDate;
+			if ((a !== undefined) && (a !== null)) {
+				this._anneeMaxDate = a.toISOString().substr(0, 10);
+			}
+		}
+		return this.post_update_annee();
+	}//change_annee
     public get unite(): IUnite {
         return (this._unite !== undefined) ? this._unite : null;
     }
     public set unite(s: IUnite) {
 		if (!this._bInUnite) {
 			this._bInUnite = true;
-			this._unite = (s !== undefined) ? s : null;
-			this.post_update_unite().then((b) => {
+			this.change_unite(s).then((x) => {
 				this._bInUnite = false;
-			})
+			});
 		}
     }
+	public change_unite(s: IUnite): Promise<boolean> {
+		this._unite = (s !== undefined) ? s : null;
+		return this.post_update_unite();
+    }//change_unite
     //
     public get person(): IPerson {
         return this.loginInfo.person;

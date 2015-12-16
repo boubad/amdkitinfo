@@ -78,7 +78,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 	}// get_all_ids
 	//
 	public get canShowForm(): boolean {
-		return this.is_refresh() && (!this.get_isbusy_change());
+		return this.is_refresh() && this.is_not_busy;
 	}
 	protected is_refresh(): boolean {
 		return (!this.get_isbusy_change());

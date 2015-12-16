@@ -18,7 +18,7 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 	private _unitesNotes: Map<string, SummaryItemMap>;
 	private _totalNotes: Map<string, SummaryItem>;
 	//
-	private _devoirNotes: SummaryItem[];
+	private _devoirNotes: IEtudiantEvent[] = [];
 	private _matNotes: SummaryItem[];
 	private _unNotes: SummaryItem[];
 	private _totNotes: SummaryItem[];
@@ -28,13 +28,12 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 	}// constructor
 	public update_semestre(): void {
 		let semid = (this.currentSemestre !== null) ? this.currentSemestre.id : null;
-		this._devoirNotes = this.get_devoirs_notes(semid);
 		this._matNotes = this.get_matieres_notes(semid);
 		this._unNotes = this.get_unites_notes(semid);
 	}// post_change_semestre
 	//
-	public get devoirsNotes(): SummaryItem[] {
-		return ((this._devoirNotes !== undefined) && (this._devoirNotes !== null)) ? this._devoirNotes : [];
+	public get devoirsNotes(): IEtudiantEvent[] {
+		return this._devoirNotes;
 	}
 	public get matieresNotes(): SummaryItem[] {
 		return ((this._matNotes !== undefined) && (this._matNotes !== null)) ? this._matNotes : [];
@@ -69,6 +68,7 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 		if (evt.genre != EVT_NOTE) {
 			return false;
 		}
+		this._devoirNotes.push(evt);
 		let n = evt.note;
 		if ((n === undefined) || (n === null) || (n < 0.0)) {
 			return false;
@@ -243,20 +243,6 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 		});
 		this._totNotes = this.get_total_notes();
 	}// compute_unites_notes
-	public get_devoirs_notes(semestreid: string): SummaryItem[] {
-		let oRet: SummaryItem[]= [];
-		if ((semestreid === undefined) || (semestreid === null)) {
-			return oRet;
-		}
-		if ((this._detailNotes === undefined) || (this._detailNotes === null)) {
-			return oRet;
-		}
-		if (this._detailNotes.has(semestreid)) {
-			let v = this._detailNotes.get(semestreid);
-			oRet = v.get_values();
-		}
-		return oRet;
-	}// get_devoirs_notes
 	public get_matieres_notes(semestreid: string): SummaryItem[] {
 		let oRet: SummaryItem[]= [];
 		if ((semestreid === undefined) || (semestreid === null)) {

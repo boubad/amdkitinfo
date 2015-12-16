@@ -141,7 +141,7 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		this._add_mode = b;
 	}
 	public get canAdd(): boolean {
-		return (!this.addMode) && this.isEditable;
+		return (!this.addMode) && this.isEditable && this.is_not_busy;
 	}
 	public addNew(): any {
 		this.oldItem = this.currentItem;
@@ -162,13 +162,13 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		this.cancel_add();
 	}
 	public get canRemove(): boolean {
-		return this.isEditItem && this.isEditable;
+		return this.isEditItem && this.isEditable && this.is_not_busy;
 	}
 	public get cannotRemove(): boolean {
 		return (!this.canRemove);
 	}
 	public get canSave(): boolean {
-		return this.is_storeable() && this.isEditable;
+		return this.is_storeable() && this.isEditable && this.is_not_busy;
 	}
 	public get cannotSave(): boolean {
 		return (!this.canSave);

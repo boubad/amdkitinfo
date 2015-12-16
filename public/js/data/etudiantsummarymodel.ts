@@ -88,7 +88,7 @@ export class EtudiantSumaryModel extends BaseDetailModel<IEtudiant> {
 		this.evtsSum.update_semestre();
 		
 	}
-	public get devoirsNotes(): SummaryItem[] {
+	public get devoirsNotes(): IEtudiantEvent[] {
 		return (this.notesSum !== null) ? this.notesSum.devoirsNotes : [];
 	}
 	public get has_devoirsNotes(): boolean {

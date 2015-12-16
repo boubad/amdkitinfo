@@ -255,13 +255,19 @@
 							<h4>Détail notes</h4>
 							<table id="link-table">
 								<tr>
+									<th>Unité</th>
+									<th>Matiere</th>
+									<th>Date</th>
 									<th>Devoir</th>
 									<th>Note</th>
 									<th>Coefficient</th>
 									<th>Observations</th>
 								</tr>
-								<tr repeat.for="nt of matieresNotes">
-									<td>${nt.name}</td>
+								<tr repeat.for="nt of devoirsNotes">
+									<td>${nt.uniteName}</td>
+									<td>${nt.matiereName}</td>
+									<td>${nt.dateString}</td>
+									<td>${nt.groupeEventName}</td>
 									<td>${nt.note}</td>
 									<td>${nt.coefficient}</td>
 									<td>${nt.description}</td>

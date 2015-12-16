@@ -41,6 +41,13 @@ export class BaseBar<T extends BaseModel> {
 		}
 	}
 	//
+	public get is_busy():boolean {
+		return (this.parent !== null) ? this.parent.is_busy : false;
+	}
+	public get is_not_busy():boolean {
+		return (this.parent !== null) ? this.parent.is_not_busy : false;
+	}
+	//
 	public get departements(): IDepartement[] {
         return (this.parent !== null) ? this.parent.departements : [];
     }

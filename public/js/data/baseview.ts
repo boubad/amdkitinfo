@@ -7,17 +7,16 @@ export class BaseView extends BaseModel {
 	constructor(user: UserInfo) {
 		super(user);
 	}// constructor
-	public refreshAll(): Promise<any> {
-		return Promise.resolve(false);
-	}
-	protected get_isbusy_change():boolean {
-		return this.in_activate || this.get_is_in_params_change();
+	protected get_isbusy_change(): boolean {
+		return this.in_activate || super.get_is_in_params_change();
 	}// get_is_busy_change
 	public activate(params?: any, config?: any, instruction?: any): any {
 		this.in_activate = true;
-		return this.perform_activate().then((x) => {
+		return this.initialize_activate_params(params).then((b) => {
+			return this.perform_activate();
+		}).then((x) => {
 			return this.refreshAll();
-		}).then((xr)=>{
+		}).then((xr) => {
 			this.in_activate = false;
 			return true;
 		}).catch((e) => {

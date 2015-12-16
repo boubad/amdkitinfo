@@ -18,10 +18,10 @@ export class BaseModel extends InfoElement {
 	private _bInMatiere: boolean = false;
 	private _bInGroupe: boolean = false;
 	private _bInSemestre: boolean = false;
-	private _baseUrl: string = null;
 	public title: string = null;
     public error_message: string = null;
     public info_message: string = null;
+	private _xbusy:boolean = false;
 	//
 	constructor(user: UserInfo) {
 		super();
@@ -105,8 +105,20 @@ export class BaseModel extends InfoElement {
 			this.is_in_semestre_change || this.is_in_unite_change || this.is_in_unite_change ||
 			this.is_in_departement_change);
 	}
+	protected get_isbusy_change(): boolean {
+		return  this.get_is_in_params_change();
+	}// get_is_busy_change
 	public get is_in_params_change(): boolean {
 		return this.get_is_in_params_change();
+	}
+	public get is_busy():boolean {
+		return (this._xbusy) && this.get_isbusy_change();
+	}
+	public set is_busy(b:boolean){
+		this._xbusy = ((b !== undefined) && (b !== null)) ? b: false;
+	}
+	public get is_not_busy():boolean {
+		return (!this.is_busy);
 	}
 	//
 	protected post_update_departement(): Promise<boolean> {
@@ -399,37 +411,45 @@ export class BaseModel extends InfoElement {
         }// p
         return Promise.all(pp);
     }// retrive_avatars
+	protected initialize_activate_params(params?:any) : Promise<boolean> {
+		return Promise.resolve(true);
+	}// initialize_activate_params
+	public refreshAll(): Promise<any> {
+		return Promise.resolve(false);
+	}
 	protected perform_activate(): Promise<any> {
-		if (this.departement === null) {
-			if (this.departements.length > 0) {
-				this.departement = this.departements[0];
-			}
+		let d = this.departement;
+		if ((d === null) && (this.departements.length > 0)){
+			d = this.departements[0];
 		}
-		if (this.annee === null) {
-			if (this.annees.length > 0) {
-				this.annee = this.annees[0];
+		return this.userInfo.change_departement(d).then((x)=>{
+			let a = this.annee;
+			if ((a === null) && (this.annees.length > 0)) {
+				a = this.annees[0];
 			}
-		}
-		if (this.semestre === null) {
-			if (this.semestres.length > 0) {
-				this.semestre = this.semestres[0];
+			return this.userInfo.change_annee(a);
+		}).then((xx)=>{
+			let a = this.unite;
+			if ((a === null) && (this.unites.length > 0)) {
+				a = this.unites[0];
 			}
-		}
-		if (this.groupe === null) {
-			if (this.groupes.length > 0) {
-				this.groupe = this.groupes[0];
+			return this.userInfo.change_unite(a);
+		}).then((xxx)=>{
+			let a = this.semestre;
+			if ((a === null) && (this.semestres.length > 0)) {
+				a = this.semestres[0];
 			}
-		}
-		if (this.unite === null) {
-			if (this.unites.length > 0) {
-				this.unite = this.unites[0];
-			}
-		}
-		if (this.matiere === null) {
-			if (this.matieres.length > 0) {
+			return this.userInfo.change_semestre(a);
+		}).then((b)=>{
+			let a = this.matiere;
+			if ((a === null) && (this.matieres.length > 0)) {
 				this.matiere = this.matieres[0];
 			}
-		}
-		return Promise.resolve(true);
+			let g = this.groupe;
+			if ((g === null) && (this.groupes.length > 0)) {
+				this.groupe = this.groupes[0];
+			}
+			return true;
+		});
 	}
 }// class BaseModel
