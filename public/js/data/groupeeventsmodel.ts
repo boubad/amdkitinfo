@@ -253,6 +253,9 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
                 let oRet1: IEtudiantEvent[] = [];
                 let oRet2: IEtudiantEvent[] = [];
                 for (let x of ee) {
+					if (x.groupeEventGenre == null){
+						x.groupeEventGenre = this.currentItem.genre;
+					}
                     if (x.genre == EVT_NOTE) {
                         this.add_item_to_array(oRet1, x);
                     } else {
@@ -312,6 +315,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 					groupeeventid: item.id,
 					etudiantaffectationid: a.id,
 					groupeEventName: this.currentItem.name,
+					groupeEventGenre: this.currentItem.genre,
 					coefficient: this.currentItem.coefficient,
 					etudiantid: a.etudiantid,
 					anneeid: this.anneeid,
@@ -756,6 +760,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 					groupeeventid: item.id,
 					etudiantaffectationid: a.id,
 					groupeEventName: this.currentItem.name,
+					groupeEventGenre: this.currentItem.genre,
 					coefficient: this.currentItem.coefficient,
 					etudiantid: a.etudiantid,
 					anneeid: this.anneeid,

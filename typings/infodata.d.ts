@@ -212,6 +212,7 @@ declare module 'infodata' {
     export interface IEtudiantEvent extends IInfoEvent {
         groupeeventid: string;
         groupeEventName: string;
+		groupeEventGenre:string;
         etudiantid: string;
         etudiantaffectationid: string;
         note: number;

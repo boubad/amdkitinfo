@@ -10,6 +10,7 @@ export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
 	private _etudiantid: string;
     private _note: number;
 	private _groupeEventName: string;
+	private _groupeEventGenre: string;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -25,6 +26,9 @@ export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
             }
 			if (oMap.groupeEventName !== undefined) {
                 this.groupeEventName = oMap.groupeEventName;
+            }
+			if (oMap.groupeEventGenre !== undefined) {
+                this.groupeEventGenre = oMap.groupeEventGenre;
             }
 			if (oMap.etudiantid !== undefined) {
                 this.etudiantid = oMap.etudiantid;
@@ -43,6 +47,12 @@ export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
 	}
 	public set groupeEventName(s: string) {
 		this._groupeEventName = this.format_name(s);
+	}
+	public get groupeEventGenre(): string {
+		return (this._groupeEventGenre !== undefined) ? this._groupeEventGenre : null;
+	}
+	public set groupeEventGenre(s: string) {
+		this._groupeEventGenre = this.format_name(s);
 	}
 	public get etudiantaffectationid(): string {
 		return (this._etudiantaffectationid !== undefined) ? this._etudiantaffectationid : null;
@@ -72,6 +82,9 @@ export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
 		}
 		if (this.groupeEventName !== null) {
 			oMap.groupeEventName = this.groupeEventName;
+		}
+		if (this.groupeEventGenre !== null) {
+			oMap.groupeEventGenre = this.groupeEventGenre;
 		}
     } // to_map
 	//
