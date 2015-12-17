@@ -24,11 +24,14 @@ export class BaseView extends BaseModel {
 			return false;
 		});
 	}// activate
-protected activate_refresh():Promise<boolean>{
-	if (!this.in_activate){
-		return this.refreshAll();
-	} else {
-		return Promise.resolve(true);
+	public deactivate():any {
+		return this.perform_deactivate();
 	}
-} 
+	protected activate_refresh(): Promise<boolean> {
+		if (!this.in_activate) {
+			return this.refreshAll();
+		} else {
+			return Promise.resolve(true);
+		}
+	}
 } //class BaseView

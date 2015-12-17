@@ -28,7 +28,7 @@ export class SynchroModel extends BaseView {
 	}
 	public get canPerform(): boolean {
 		return ((this._canPerform !== undefined) && (this._canPerform !== null)) ?
-		 this._canPerform  && this.is_not_busy : false;
+			this._canPerform && this.is_not_busy : false;
 	}
 	public set canPerform(b: boolean) {
 		this._canPerform = b;
@@ -73,12 +73,12 @@ export class SynchroModel extends BaseView {
     }// addServer
     //
 	public get canImport(): boolean {
-        return (this.currentServer !== null) ? 
-		this.syncManager.canImport && this.is_not_busy : false;
+        return (this.currentServer !== null) ?
+			this.syncManager.canImport && this.is_not_busy : false;
     }
 	public get canExport(): boolean {
         return (this.currentServer !== null) ?
-		 this.syncManager.canExport && this.is_not_busy : false;
+			this.syncManager.canExport && this.is_not_busy : false;
     }
 	public import(): Promise<any> {
 		this.is_busy = true;
@@ -123,4 +123,7 @@ export class SynchroModel extends BaseView {
 		}
 		return bRet;
     }// activate
+	public canDeactivate(): any {
+		return this.is_not_busy;
+	}
 }// SynchroModel

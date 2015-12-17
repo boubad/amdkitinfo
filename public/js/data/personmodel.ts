@@ -151,61 +151,7 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
     }// reset_password
 	//
 	private sync_avatars(): Promise<boolean> {
-		let pPers = this.currentPerson;
-		if ((pPers === undefined) || (pPers === null)){
-			return Promise.resolve(false);
-		}
-		if ((pPers.id === null) || (pPers.rev === null)){
-			return Promise.resolve(false);
-		}
-		let items:IBaseItem[] = [];
-		let avatarid = pPers.avatarid;
-		let service = this.dataService;
-		return service.get_items_array(pPers.administratorids).then((pp1:IBaseItem[])=>{
-			if ((pp1 !== undefined) && (pp1 !== null) && (pp1.length > 0)){
-				for (let x of pp1){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.enseignantids);
-		}).then((pp2)=>{
-			if ((pp2 !== undefined) && (pp2 !== null) && (pp2.length > 0)){
-				for (let x of pp2){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.etudiantids);
-		}).then((pp3)=>{
-			if ((pp3 !== undefined) && (pp3 !== null) && (pp3.length > 0)){
-				for (let x of pp3){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.affectationids);
-		}).then((pp4)=>{
-			if ((pp4 !== undefined) && (pp4 !== null) && (pp4.length > 0)){
-				for (let x of pp4){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.eventids);
-		}).then((pp5)=>{
-			if ((pp5 !== undefined) && (pp5 !== null) && (pp5.length > 0)){
-				for (let x of pp5){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.maintains_items(items);
-		}).then((xx)=>{
-			return true;
-		}).catch((e)=>{
-			return false;
-		})
+		return this.sync_person_avatars(this.currentPerson);
 	}// sync_avatars;
     //
     public saveAvatar(): any {
