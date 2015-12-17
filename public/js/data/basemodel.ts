@@ -417,7 +417,7 @@ export class BaseModel extends InfoElement {
 	public refreshAll(): Promise<any> {
 		return Promise.resolve(false);
 	}
-	protected perform_activate(): Promise<any> {
+	protected perform_activate(): Promise<boolean> {
 		let d = this.departement;
 		if ((d === null) && (this.departements.length > 0)){
 			d = this.departements[0];

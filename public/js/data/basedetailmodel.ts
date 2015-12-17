@@ -13,7 +13,13 @@ export class BaseDetailModel<T extends IInfoEvent> extends BaseView {
     constructor(userinfo: UserInfo) {
         super(userinfo);
     }
-
+   protected initialize_activate_params(params?:any) : Promise<boolean> {
+		let id = ((params !== undefined) && (params !== null) && (params.id !== undefined)) ? params.id : null;
+		return this.initialize_item(id);
+	}// initialize_activate_params
+	protected perform_activate(): Promise<boolean> {
+		return Promise.resolve(true);
+	}
 	protected initialize_item(evtid: string): Promise<boolean> {
 		this.clear_error();
 		this._evt = null;
@@ -145,16 +151,4 @@ export class BaseDetailModel<T extends IInfoEvent> extends BaseView {
 	public get matiereName(): string {
 		return (this.event !== null) ? this.event.matiereName : null;
 	}
-	public activate(params?: any, config?: any, instruction?: any): any {
-		this.in_activate = true;
-		return this.perform_activate().then((xr) => {
-			let id: string = ((params.id !== undefined) && (params.id !== null)) ? params.id : null;
-			return this.initialize_item(id);
-		}).then((r) => {
-			this.in_activate = false;
-			return true;
-		}).catch((e) => {
-			return false;
-		});
-	}// activate
 }

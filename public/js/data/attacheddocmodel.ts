@@ -106,7 +106,7 @@ export class AttachedDocModel extends BaseView {
 		this.refreh_docs();
 	}
 	//
-	public refreh_docs(): Promise<any> {
+	public refreh_docs(): Promise<boolean> {
 		this.fileDesc.clear();
 		this._current_item = null;
 		this._docs = [];
@@ -126,13 +126,13 @@ export class AttachedDocModel extends BaseView {
 			return true;
 		});
 	}// refresh_docs
-	public activate(params?: any, config?: any, instruction?: any): any {
-		this._itemid = null;
-        return super.activate(params, config, instruction).then((r) => {
-            this._itemid = (params.id !== undefined) ? params.id : null;
-			return this.refreh_docs();
-		});
-    }// activate
+	protected initialize_activate_params(params?:any) : Promise<boolean> {
+		this._itemid = ((params !== undefined) && (params !== null) && (params.id !== undefined)) ? params.id : null;
+		return this.refreh_docs();
+	}// initialize_activate_params
+	protected perform_activate(): Promise<boolean> {
+		return Promise.resolve(true);
+	}
 	public deactivate(): any {
 		this.fileDesc.clear();
 		if (this._link_ref !== null) {

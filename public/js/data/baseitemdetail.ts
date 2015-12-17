@@ -36,6 +36,9 @@ export class BaseDetailModel<T extends IPersonItem> extends BaseView {
 		}
 		return this._person;
 	}
+	public get eventId():string {
+		return (this.currentItem !== null) ? this.currentItem.id : null;
+	}
 	public set currentPerson(s: IPerson) {
 		this._person = s;
 	}
