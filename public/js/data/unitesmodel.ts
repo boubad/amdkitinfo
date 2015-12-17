@@ -51,6 +51,7 @@ export class UnitesModel extends DepSigleNameViewModel<IUnite> {
 		if (!item.is_storeable()) {
 			return Promise.resolve(false);
 		}
+		this.is_busy = true;
 		this.clear_error();
 		item.check_id();
 		let model = this.itemFactory.create_matiere({ uniteid: item.id });
@@ -64,6 +65,7 @@ export class UnitesModel extends DepSigleNameViewModel<IUnite> {
 			item.coefficient = (sum > 0) ? sum : 1;
 			return this.dataService.save_item(item);
 		}).then((r) => {
+			this.is_busy = false;
 			if (item.rev !== null) {
 				return this.refresh();
 			} else {
@@ -71,6 +73,7 @@ export class UnitesModel extends DepSigleNameViewModel<IUnite> {
 			}
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 			return false;
 		});
 	}// save

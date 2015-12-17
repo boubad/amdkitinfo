@@ -27,7 +27,8 @@ export class SynchroModel extends BaseView {
 		return (this._manager !== undefined) ? this._manager : null;
 	}
 	public get canPerform(): boolean {
-		return ((this._canPerform !== undefined) && (this._canPerform !== null)) ? this._canPerform : false;
+		return ((this._canPerform !== undefined) && (this._canPerform !== null)) ?
+		 this._canPerform  && this.is_not_busy : false;
 	}
 	public set canPerform(b: boolean) {
 		this._canPerform = b;
@@ -46,7 +47,7 @@ export class SynchroModel extends BaseView {
 
     public get canRemoveServer(): boolean {
         return (this.currentServer !== null) && (this.currentServer.trim().length > 0) &&
-			this.canImport && this.canExport;
+			this.canImport && this.canExport && this.is_not_busy;
     }
     public get cannotRemoveServer(): boolean {
         return (!this.canRemoveServer);
@@ -59,7 +60,7 @@ export class SynchroModel extends BaseView {
     //
     public get canAddServer(): boolean {
         return (this.candidateServer !== null) && (this.candidateServer.trim().length > 0) &&
-			this.canImport && this.canExport;
+			this.canImport && this.canExport && this.is_not_busy;
     }
     public get cannotAddServer(): boolean {
         return (!this.canAddServer);
@@ -72,12 +73,15 @@ export class SynchroModel extends BaseView {
     }// addServer
     //
 	public get canImport(): boolean {
-        return (this.currentServer !== null) ? this.syncManager.canImport : false;
+        return (this.currentServer !== null) ? 
+		this.syncManager.canImport && this.is_not_busy : false;
     }
 	public get canExport(): boolean {
-        return (this.currentServer !== null) ? this.syncManager.canExport : false;
+        return (this.currentServer !== null) ?
+		 this.syncManager.canExport && this.is_not_busy : false;
     }
 	public import(): Promise<any> {
+		this.is_busy = true;
 		this.canPerform = false;
 		this.clear_error();
 		this.info_message = "Synchronization en cours (import) ...";
@@ -85,24 +89,29 @@ export class SynchroModel extends BaseView {
 			this.userInfo.loginInfo.refresh_data();
 			this.info_message = "Synchronization terminée!";
 			this.canPerform = true;
+			this.is_busy = false;
 			return true;
 		}).catch((e) => {
 			this.set_error(e);
 			this.canPerform = true;
+			this.is_busy = false;
 			return false;
 		})
 	}
 	public export(): Promise<any> {
+		this.is_busy = true;
 		this.canPerform = false;
 		this.clear_error();
 		this.info_message = "Synchronization en cours (export) ...";
 		return this.syncManager.export_to().then((r) => {
 			this.info_message = "Synchronization terminée";
 			this.canPerform = true;
+			this.is_busy = false;
 			return true;
 		}).catch((e) => {
 			this.set_error(e);
 			this.canPerform = true;
+			this.is_busy = false;
 			return false;
 		})
 	}

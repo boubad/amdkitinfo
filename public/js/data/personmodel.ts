@@ -20,20 +20,26 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
     }// constructor
 	//
 	public get canImport(): boolean {
-        return (this.departementid !== null);
+        return (this.departementid !== null) && this.is_not_busy;
     }
     public importFileChanged(event: MyEvent): any {
         let files = event.target.files;
         if ((files !== undefined) && (files !== null) && (files.length > 0)) {
+			this.is_busy = true;
             let file = files[0];
             if ((this._importer === undefined) || (this._importer === null)) {
                 this._importer = new CSVImporter(this.dataService.itemFactory);
             }
             let stype = this.currentPerson.type();
             this._importer.transform_file(file, stype).then((dd: IPerson[]) => {
-                this.import_persons(dd);
+                return this.import_persons(dd);
+			}).then((b)=>{
+				this.is_busy = false;
+				return true;
             }).catch((err) => {
                 this.set_error(err);
+				this.is_busy = false;
+				return false;
             });
         }// files
     }// fileChanged
@@ -131,14 +137,16 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		if ((id === null) || (x.rev === null)) {
 			return;
 		}
-		let self = this;
+		this.is_busy = true;
 		let service = this.dataService;
 		this.clear_error();
 		x.reset_password();
 		return service.save_item(x).then((r) => {
 			this.info_message = 'Mot de passe modifié.';
+			this.is_busy = false;
 		}).catch((err) => {
-			self.set_error(err);
+			this.set_error(err);
+			this.is_busy = false;
 		});
     }// reset_password
 	//
@@ -219,6 +227,7 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		if ((avatarid === null) || (type === null) || (data === null)) {
 			return;
 		}
+		this.is_busy = true;
 		let service = this.dataService;
 		this.clear_error();
 		return service.maintains_attachment(id, avatarid, data, type).then((r) => {
@@ -235,9 +244,11 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		}).then((xx) => {
 			return this.sync_avatars();
 		}).then((cc)=>{
+			this.is_busy = false;
 			this.info_message = 'Avatar modifié.';
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 		});
     }// saveAvatar
 	//
@@ -253,6 +264,7 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		if (avatarid === null){
 			return Promise.resolve(false);
 		}
+		this.is_busy = true;
 		let p = this.currentItem;
 		let service = this.dataService;
 		return this.confirm('Voulez-vous vraiment supprimer cet avatar?').then((bRet) => {
@@ -277,18 +289,22 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 			if (x) {
 				this.fileDesc.clear();
 				this.info_message = 'Avatar supprimé.';
-				return true;
+				return Promise.resolve(false);
 			} else {
-				return false;
+				return Promise.resolve(false);
 			}
 		}).then((bx)=>{
 			if (bx){
 				return this.sync_avatars();
 			} else {
-				return false;
+				return Promise.resolve(false);
 			}
+		}).then((xx)=>{
+			this.is_busy = false;
+			return true;
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 			return false;
 		});
 	}// removeAvatar
@@ -361,6 +377,7 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		if (!pPers.is_storeable()) {
 			return Promise.resolve(false);
         }
+		this.is_busy = true;
 		let item = this.currentItem;
         if (item === null) {
             item = this.create_item();
@@ -385,6 +402,7 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		return this.dataService.save_item(this.currentPerson).then((b) => {
 			return this.dataService.save_item(item);
 		}).then((rx) => {
+			this.is_busy = false;
 			if (bOld) {
                 return this.refresh();
             } else {
@@ -392,6 +410,7 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
             }
         }).catch((err) => {
             this.set_error(err);
+			this.is_busy = false;
 			return false;
         });
     }// save
