@@ -14,7 +14,7 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
     }// constructor
     protected post_update_semestre(): Promise<boolean> {
 		return super.post_update_semestre().then((r) => {
-			if (!this.in_activate) {
+			if (this.is_not_busy) {
 				return this.refreshAll();
 			} else {
 				return Promise.resolve(true);
@@ -43,8 +43,10 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
         return Promise.resolve([]);
     }
     public refreshAll(): Promise<any> {
+		this.is_busy=true;
         this.prepare_refresh();
         if (!this.is_refresh()) {
+			this.is_busy=false;
             return Promise.resolve(true);
         }
         let nc = this.itemsPerPage;
@@ -61,12 +63,20 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
                 self.pagesCount = np;
             }
             return self.refresh();
-        });
+        }).then((x)=>{
+			this.is_busy=false;
+			return true;
+		}).catch((rr)=>{
+			this.is_busy= false;
+			return false;
+		});
     }// refreshAll
     public refresh(): Promise<any> {
+		this.is_busy=true;
         this.clear_error();
         this.items = [];
         if (!this.is_refresh()) {
+			this.is_busy=false;
             return Promise.resolve(true);
         }
         let nbItems = this._all_data.length;
@@ -92,7 +102,11 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
         return this.retrieve_avatars(oRet).then((pp: IDisplayEtudiant[]) => {
             self.items = pp;
 			this.pageStatus = this.get_pageStatus();
-            return true;
-        });
+			this.is_busy=false;
+			return true;
+		}).catch((rr)=>{
+			this.is_busy= false;
+			return false;
+		});
     }// refresh
 }// class BaseEditViewModel

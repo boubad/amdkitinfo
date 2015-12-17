@@ -20,8 +20,8 @@
 				<pagination-bar></pagination-bar>
 			</td>
 		</tr>
-		<tr if.bind="hasItems">
-			<td>
+		<tr if.bind="can_show">
+			<td if.bind="hasItems">
 				<table id="link-table">
 					<tr>
 						<th></th>
