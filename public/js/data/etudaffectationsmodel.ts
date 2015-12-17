@@ -20,7 +20,6 @@ export class EtudaffectationsModel extends AffectationViewModel<IEtudiantAffecta
 			departementid: this.departementid ,
 			departementName: this.departementName});
     }
-	
 	private get_groupe_parents(p:IGroupe) : Promise<IGroupe[]> {
 		let oRet:IGroupe[] = [];
 		if ((p === undefined) || (p === null)){

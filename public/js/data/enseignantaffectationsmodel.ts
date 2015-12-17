@@ -101,26 +101,10 @@ export class EnseignantAffectationsModel extends AffectationViewModel<IEnseignan
 		return super.post_update_matiere().then((r)=>{
 			this.modelItem.matiereid = this.matiereid;
         this.currentAffectations = [];
-		if (!this.in_activate){
-			return this.refreshAll();
-		} else {
-			return Promise.resolve(true);
-		}
+		return this.activate_refresh();
 		});
     }
     protected is_refresh(): boolean {
         return super.is_refresh() && (this.modelItem.matiereid !== null);
     }
-    //
-	protected perform_activate(): Promise<any> {
-		return super.perform_activate().then((r) => {
-			if ((this.unite == null) && (this.unites.length > 0)){
-				this.unite = this.unites[0];
-			}
-			if ((this.matiere == null) && (this.matieres.length > 0)){
-				this.matiere = this.matieres[0];
-			}
-			return true;
-		});
-	}
 }// class ProfAffectationModel

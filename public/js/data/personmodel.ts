@@ -110,12 +110,8 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 	}// perform_activate
     protected post_update_departement(): Promise<boolean> {
 		return super.post_update_departement().then((r)=>{
-		 this.modelItem.departementid = this.departementid;
-		 if (!this.in_activate){
-			 return this.refreshAll();
-		 } else {
-			 return Promise.resolve(true);
-		 }	
+			this.modelItem.departementid = this.departementid;
+            return this.activate_refresh();
 		});
     }// post_change_departement
     public get currentPerson(): IPerson {
@@ -325,53 +321,37 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
         return (this.departementid !== null);
     }
     protected is_storeable(): boolean {
-        return (this.currentPerson !== null) &&
-			this.currentPerson.is_storeable() && (this.departementid !== null);
+        return this.currentPerson.is_storeable() && (this.departementid !== null);
     }
     public get username(): string {
         return this.currentPerson.username;
     }
     public set username(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.username = s;
-        }
+        this.currentPerson.username = s;
     }
     public get firstname(): string {
         return this.currentPerson.firstname;
     }
     public set firstname(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.firstname = s;
-        }
+        this.currentPerson.firstname = s;
     }
     public get lastname(): string {
         return this.currentPerson.lastname;
     }
     public set lastname(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.lastname = s;
-        }
+        this.currentPerson.lastname = s;
     }
     public get email(): string {
         return this.currentPerson.email;
     }
     public set email(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.email = s;
-        }
+        this.currentPerson.email = s;
     }
     public get phone(): string {
         return this.currentPerson.phone;
     }
     public set phone(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.phone = s;
-        }
+        this.currentPerson.phone = s;
     }
     public save(): Promise<any> {
         let pPers = this.currentPerson;
@@ -415,4 +395,8 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 			return false;
         });
     }// save
+	public get isEditable(): boolean {
+		return this.is_admin || this.is_super;
+    }
+	public set isEditable(b:boolean){}
 }// class PersonViewModel

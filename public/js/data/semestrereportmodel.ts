@@ -14,11 +14,7 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
     }// constructor
     protected post_update_semestre(): Promise<boolean> {
 		return super.post_update_semestre().then((r) => {
-			if (this.is_not_busy) {
-				return this.refreshAll();
-			} else {
-				return Promise.resolve(true);
-			}
+			return this.activate_refresh();
 		});
     }
     protected is_refresh(): boolean {
@@ -43,6 +39,9 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
         return Promise.resolve([]);
     }
     public refreshAll(): Promise<any> {
+		if (this.is_busy){
+			return Promise.resolve(false);
+		}
 		this.is_busy=true;
         this.prepare_refresh();
         if (!this.is_refresh()) {
@@ -72,6 +71,9 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
 		});
     }// refreshAll
     public refresh(): Promise<any> {
+		if (this.is_busy){
+			return Promise.resolve(false);
+		}
 		this.is_busy=true;
         this.clear_error();
         this.items = [];

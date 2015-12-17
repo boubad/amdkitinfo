@@ -18,11 +18,7 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
     }// constructor
     protected post_update_semestre(): Promise<boolean> {
 		return super.post_update_semestre().then((r) => {
-			if (this.is_not_busy) {
-				return this.refreshAll();
-			} else {
-				return true;
-			}
+			return this.activate_refresh();
 		});
     }
     protected post_update_matiere(): Promise<boolean> {

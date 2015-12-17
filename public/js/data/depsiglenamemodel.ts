@@ -21,23 +21,7 @@ export class DepSigleNameViewModel<T extends IDepartementSigleNamedItem>
     protected post_update_departement(): Promise<boolean> {
 		return super.post_update_departement().then((r)=>{
 			this.modelItem.departementid = this.departementid;
-        this.currentItem = this.create_item();
-		if (!this.in_activate){
-		return this.refreshAll() ;
-		} else {
-			return Promise.resolve(true);
-		}
+            return this.activate_refresh();
 		});
     }
-	protected perform_activate(): Promise<any> {
-		return super.perform_activate().then((r)=>{
-			if (this.departementid == null){
-				if (this.departements.length > 0){
-					this.departement = this.departements[0];
-				}
-			}
-			this.modelItem.departementid = this.departementid;
-        	this.currentItem = this.create_item();
-		})
-	}
 }// class BaseEditViewModel

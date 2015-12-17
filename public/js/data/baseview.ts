@@ -15,13 +15,20 @@ export class BaseView extends BaseModel {
 		return this.initialize_activate_params(params).then((b) => {
 			return this.perform_activate();
 		}).then((x) => {
+			this.in_activate = false;
 			return this.refreshAll();
 		}).then((xr) => {
-			this.in_activate = false;
 			return true;
 		}).catch((e) => {
 			this.in_activate = false;
 			return false;
 		});
 	}// activate
+protected activate_refresh():Promise<boolean>{
+	if (!this.in_activate){
+		return this.refreshAll();
+	} else {
+		return Promise.resolve(true);
+	}
+} 
 } //class BaseView

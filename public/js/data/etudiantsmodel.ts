@@ -20,13 +20,12 @@ export class EtudiantsModel extends PersonViewModel<IEtudiant> {
 		});
     }
      protected post_change_item(): Promise<any> {
-        let self = this;
         return super.post_change_item().then((r) => {
           let pPers = this.currentPerson;
           if (pPers !== null){
-              self._date = this.date_to_string(pPers.birthDate);
+              this._date = this.date_to_string(pPers.birthDate);
           } else {
-              self._date = null;
+              this._date = null;
           }
           return true;
         });
@@ -35,101 +34,67 @@ export class EtudiantsModel extends PersonViewModel<IEtudiant> {
         return this.currentPerson.dossier;
     }
     public set dossier(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.dossier = s;
-        }
+        this.currentPerson.dossier = s;
     }
     public get sexe(): string {
         return this.currentPerson.sexe;
     }
     public set sexe(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.sexe = s;
-        }
+        this.currentPerson.sexe = s;
     }
 	 public get birthYear(): string {
-        return (this.currentPerson !== null) ? 
-		this.number_to_string(this.currentPerson.birthYear) : null;
+        return this.number_to_string(this.currentPerson.birthYear);
     }
     public set birthYear(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.birthYear = this.check_number(x);
-        }
+        this.currentPerson.birthYear = this.check_number(s);
     }
     public get birthDate(): string {
         return this._date;
     }
     public set birthDate(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.birthDate =this.string_to_date(s);
-            this._date = this.date_to_string(x.birthDate);
-        }
+        this.currentPerson.birthDate = this.string_to_date(s);
+		this._date = s;
     }
     public get ville(): string {
         return this.currentPerson.ville;
     }
     public set ville(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.ville = s;
-        }
+        this.currentPerson.ville = s;
     }
     public get etablissement(): string {
         return this.currentPerson.etablissement;
     }
     public set etablissement(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.etablissement = s;
-        }
+        this.currentPerson.etablissement = s;
     }
     public get serieBac(): string {
         return this.currentPerson.serieBac;
     }
     public set serieBac(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.serieBac = s;
-        }
+        this.currentPerson.serieBac = s;
     }
     public get optionBac(): string {
         return this.currentPerson.optionBac;
     }
     public set optionBac(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.optionBac = s;
-        }
+        this.currentPerson.optionBac = s;
     }
     public get mentionBac(): string {
         return this.currentPerson.mentionBac;
     }
     public set mentionBac(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.mentionBac = s;
-        }
+        this.currentPerson.mentionBac = s;
     }
     public get etudesSuperieures(): string {
         return this.currentPerson.etudesSuperieures;
     }
     public set etudesSuperieures(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.etudesSuperieures = s;
-        }
+        this.currentPerson.etudesSuperieures = s;
     }
 	 public get apb(): string {
         return this.currentPerson.apb;
     }
     public set apb(s: string) {
-        let x = this.currentPerson;
-        if (x !== null) {
-            x.apb = s;
-        }
+        this.currentPerson.apb = s;
     }
 }// class Etudiants

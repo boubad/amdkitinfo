@@ -35,7 +35,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			} else {
 				this.fileDesc.clear();
 			}
-		})
+		});
 	}
 	protected create_item(): T {
 		return null;

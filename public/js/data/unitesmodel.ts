@@ -51,7 +51,6 @@ export class UnitesModel extends DepSigleNameViewModel<IUnite> {
 		if (!item.is_storeable()) {
 			return Promise.resolve(false);
 		}
-		var self = this;
 		this.clear_error();
 		item.check_id();
 		let model = this.itemFactory.create_matiere({ uniteid: item.id });
@@ -66,12 +65,12 @@ export class UnitesModel extends DepSigleNameViewModel<IUnite> {
 			return this.dataService.save_item(item);
 		}).then((r) => {
 			if (item.rev !== null) {
-				return self.refresh();
+				return this.refresh();
 			} else {
-				return self.refreshAll();
+				return this.refreshAll();
 			}
 		}).catch((err) => {
-			self.set_error(err);
+			this.set_error(err);
 			return false;
 		});
 	}// save
